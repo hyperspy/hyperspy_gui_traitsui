@@ -65,12 +65,13 @@ elif ETSConfig.toolkit == "":
         "set it before importing matplotlib.".format(matplotlib.get_backend()))
 
 if ETSConfig.toolkit and ETSConfig.toolkit != "null":
+    import hyperspy.api_nogui # necessary to register the toolkeys
     # Register the GUI elements
-    import hyperspy.gui_traitsui.axes
-    import hyperspy.gui_traitsui.model
-    import hyperspy.gui_traitsui.tools
-    import hyperspy.gui_traitsui.preferences
-    import hyperspy.gui_traitsui.microscope_parameters
-    import hyperspy.gui_traitsui.messages
+    import hyperspy_gui_traitsui.axes
+    import hyperspy_gui_traitsui.model
+    import hyperspy_gui_traitsui.tools
+    import hyperspy_gui_traitsui.preferences
+    import hyperspy_gui_traitsui.microscope_parameters
+    import hyperspy_gui_traitsui.messages
 else:
     _logger.warning("The traitsui GUI elements are not available.")

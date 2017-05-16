@@ -1,8 +1,8 @@
 from traitsui.menu import (OKButton, CancelButton, OKCancelButtons)
 import traitsui.api as tu
 
-from hyperspy.gui_traitsui.buttons import *
-from hyperspy.gui_traitsui.utils import (
+from hyperspy_gui_traitsui.buttons import *
+from hyperspy_gui_traitsui.utils import (
     register_traitsui_widget, add_display_arg)
 
 

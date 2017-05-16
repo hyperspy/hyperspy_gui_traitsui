@@ -1,8 +1,8 @@
 import traitsui.api as tui
 from traitsui.menu import CancelButton
 
-from hyperspy.gui_traitsui.buttons import SaveButton
-from hyperspy.gui_traitsui.utils import (
+from hyperspy_gui_traitsui.buttons import SaveButton
+from hyperspy_gui_traitsui.utils import (
     register_traitsui_widget, add_display_arg)
 
 

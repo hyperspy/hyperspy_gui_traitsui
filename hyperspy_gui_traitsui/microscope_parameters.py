@@ -1,9 +1,9 @@
 import traitsui.api as tu
 from traitsui.menu import OKButton, CancelButton
 
-from hyperspy.gui_traitsui.utils import (
+from hyperspy_gui_traitsui.utils import (
     add_display_arg, register_traitsui_widget)
-from hyperspy.gui_traitsui.buttons import StoreButton
+from hyperspy_gui_traitsui.buttons import StoreButton
 
 
 class SetMetadataItemsHandler(tu.Handler):

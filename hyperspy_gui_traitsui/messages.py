@@ -2,7 +2,7 @@ import traits.api as t
 import traitsui.api as tu
 from traitsui.menu import OKButton, CancelButton
 
-from hyperspy.gui_traitsui.utils import (
+from hyperspy_gui_traitsui.utils import (
     register_traitsui_widget, add_display_arg)
 
 

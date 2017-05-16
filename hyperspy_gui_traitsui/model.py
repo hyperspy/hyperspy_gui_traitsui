@@ -1,9 +1,9 @@
 import traitsui.api as tu
 
-from hyperspy.gui_traitsui.utils import (
+from hyperspy_gui_traitsui.utils import (
     register_traitsui_widget, add_display_arg)
-from hyperspy.gui_traitsui.buttons import OurFitButton, OurCloseButton
-from hyperspy.gui_traitsui.tools import SpanSelectorInSignal1DHandler
+from hyperspy_gui_traitsui.buttons import OurFitButton, OurCloseButton
+from hyperspy_gui_traitsui.tools import SpanSelectorInSignal1DHandler
 
 
 class ComponentFitHandler(SpanSelectorInSignal1DHandler):
