@@ -1,0 +1,17 @@
+language: python
+python:
+    - "nightly"
+    - 3.5
+    - 3.4
+    - 3.6-dev
+sudo: false
+install:
+    - pip install --upgrade pip
+    - pip install https://github.com/francisco-dlp/hyperspy/archive/ipywidgets.zip
+    - pip install .
+    - export MPLBACKEND=agg
+script:
+    - python -m unittest hyperspy_gui_traitsui.test_import
+matrix:
+    allow_failures:
+        - python: "nightly"
