@@ -9,5 +9,6 @@ class Test(unittest.TestCase):
         if "traitsui" in hyperspy.ui_registry.TOOLKIT_REGISTRY:
             self.assertTrue("traitsui" in hyperspy.ui_registry.TOOLKIT_REGISTRY)
         else:
-            with self.assertRaises(ValueError):
+            # As ipywidgets is not installed it should raise an import error
+            with self.assertRaises(ImportError):
                 hs.preferences.gui(toolkit="traitsui")
