@@ -16,6 +16,8 @@ class PreferencesHandler(tui.Handler):
 PREFERENCES_VIEW = tui.View(
     tui.Group(tui.Item('General', style='custom', show_label=False, ),
               label='General'),
+    tui.Group(tui.Item('GUIs', style='custom', show_label=False, ),
+              label='GUIs'),
     tui.Group(tui.Item('EELS', style='custom', show_label=False, ),
               label='EELS'),
     tui.Group(tui.Item('EDS', style='custom', show_label=False, ),
