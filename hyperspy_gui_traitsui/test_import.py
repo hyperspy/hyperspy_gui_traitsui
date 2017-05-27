@@ -16,4 +16,3 @@ class Test(unittest.TestCase):
                 # As ipywidgets is not installed it should raise an import error
                 with self.assertRaises(ImportError):
                     hs.preferences.gui(toolkit="traitsui")
-                self.assertTrue("traitsui" in hyperspy.ui_registry.TOOLKIT_REGISTRY)
