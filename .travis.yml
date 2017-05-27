@@ -7,7 +7,7 @@ python:
 sudo: false
 install:
     - pip install --upgrade pip
-    - pip install https://github.com/francisco-dlp/hyperspy/archive/ipywidgets.zip
+    - pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
     - pip install .
     - export MPLBACKEND=agg
 script:
