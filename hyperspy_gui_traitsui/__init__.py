@@ -51,10 +51,8 @@ _logger.debug('Loading hyperspy.traitsui_gui')
 _logger.debug('Current MPL backend: %s', backend)
 if "WX" in backend:
     set_ets_toolkit("wx")
-elif "Qt4" in backend:
+elif "Qt" in backend:
     set_ets_toolkit("qt4")
-elif "Qt5" in backend:
-    set_ets_toolkit("qt5")
 elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
