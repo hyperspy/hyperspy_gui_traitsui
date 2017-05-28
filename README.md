@@ -21,7 +21,7 @@ pip install hyperspy_gui_traitsui
 Install anaconda for your platform and run
 
 ```bash
-conda install hyperspy_gui_traitsui -c conda-forge
+conda install hyperspy-gui-traitsui -c conda-forge
 
 ```
 traitsui doesn't support Qt5 as of version 5.1. Therefore, when using the
