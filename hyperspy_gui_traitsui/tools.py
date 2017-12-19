@@ -17,6 +17,40 @@ class SmoothingHandler(tu.Handler):
         return True
 
 
+class LineSelectorInSignal2DHandler(tu.Handler):
+
+    def close(self, info, is_ok):
+        info.object.on = False
+        if is_ok is True:
+            self.apply(info)
+
+        return True
+
+    def close_directly(self, info):
+        if (info.ui.owner is not None) and self.close(info, False):
+            info.ui.owner.close()
+
+    def apply(self, info, *args, **kwargs):
+        """Handles the **Apply** button being clicked.
+
+        """
+        obj = info.object
+        obj.is_ok = True
+        if hasattr(obj, 'apply'):
+            obj.apply()
+        return
+
+    def next(self, info, *args, **kwargs):
+        """Handles the **Next** button being clicked.
+
+        """
+        obj = info.object
+        obj.is_ok = True
+        if hasattr(obj, 'next'):
+            next(obj)
+        return
+
+
 class SpanSelectorInSignal1DHandler(tu.Handler):
 
     def close(self, info, is_ok):
@@ -89,6 +123,18 @@ class CalibrationHandler(SpanSelectorInSignal1DHandler):
         return
 
 
+class Calibration2DHandler(LineSelectorInSignal2DHandler):
+
+    def apply(self, info, *args, **kwargs):
+        """Handles the **Apply** button being clicked.
+        """
+        if info.object.signal is None:
+            return
+        info.object.apply()
+        self.close_directly(info)
+        return
+
+
 class ImageContrastHandler(tu.Handler):
 
     def close(self, info, is_ok):
@@ -146,6 +192,25 @@ def calibration_traitsui(obj, **kwargs):
                     style='readonly'),
             'units',),
         handler=CalibrationHandler,
+        buttons=[OurApplyButton, CancelButton],
+        kind='live',
+        title='Calibration parameters')
+    return obj, {"view": view}
+
+
+@register_traitsui_widget(toolkey="Signal2D.calibrate")
+@add_display_arg
+def calibration2d_traitsui(obj, **kwargs):
+    view = tu.View(
+        tu.Group(
+            'new_length',
+            tu.Item('ilength',
+                    label='Pixel length',
+                    style='readonly'),
+            tu.Item(name='scale',
+                    style='readonly'),
+            'units',),
+        handler=Calibration2DHandler,
         buttons=[OurApplyButton, CancelButton],
         kind='live',
         title='Calibration parameters')
