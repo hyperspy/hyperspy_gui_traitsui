@@ -204,8 +204,8 @@ def calibration2d_traitsui(obj, **kwargs):
     view = tu.View(
         tu.Group(
             'new_length',
-            tu.Item('ilength',
-                    label='Pixel length',
+            tu.Item('length',
+                    label='Current length',
                     style='readonly'),
             tu.Item(name='scale',
                     style='readonly'),
