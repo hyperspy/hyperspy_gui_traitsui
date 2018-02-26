@@ -21,6 +21,7 @@ import logging
 
 import matplotlib
 from traits.etsconfig.api import ETSConfig
+from hyperspy.defaults_parser import preferences
 
 
 _logger = logging.getLogger(__name__)
@@ -57,11 +58,12 @@ elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
     set_ets_toolkit("null")
-    _logger.warning(
-        "The {} matplotlib backend is not supported by the "
-        "installed traitsui version and the ETS toolkit has been set to null. "
-        "To set the ETS toolkit independently from the matplotlib backend, "
-        "set it before importing matplotlib.".format(matplotlib.get_backend()))
+    if preferences.GUIs.warn_if_guis_are_missing:
+        _logger.warning(
+            "The {} matplotlib backend is not supported by the "
+            "installed traitsui version and the ETS toolkit has been set to null. "
+            "To set the ETS toolkit independently from the matplotlib backend, "
+            "set it before importing matplotlib.".format(matplotlib.get_backend()))
 
 if ETSConfig.toolkit and ETSConfig.toolkit != "null":
     import hyperspy.api_nogui # necessary to register the toolkeys
@@ -73,4 +75,5 @@ if ETSConfig.toolkit and ETSConfig.toolkit != "null":
     import hyperspy_gui_traitsui.microscope_parameters
     import hyperspy_gui_traitsui.messages
 else:
-    _logger.warning("The traitsui GUI elements are not available.")
+    if preferences.GUIs.warn_if_guis_are_missing:
+        _logger.warning("The traitsui GUI elements are not available.")
