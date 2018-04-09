@@ -26,12 +26,21 @@ conda install hyperspy-gui-traitsui -c conda-forge
 ```
 traitsui doesn't support Qt5 as of version 5.1. Therefore, when using the
 Qt toolkit it may be necessary to downgrade pyqt, which requires removing
-the anaconda-navigator package as follows:
+the anaconda-navigator and the navigator-updater packages as follows:
 
 ```bash
+conda remove anaconda-navigator navigator-updater
+```
 
-conda uninstall anaconda-navigator -y
-conda install pyqt=4.11.4 -y
+## qt5 support (for advanced pip users only)
+
+Alternatively, it you want to use Qt5, you can install the development 
+version of traitsui (and pyface) which supports Qt5. You will need to 
+have the development tools to build C code installed on your system.
+
+```bash
+pip install https://github.com/enthought/pyface/archive/master.zip
+pip install https://github.com/enthought/traitsui/archive/master.zip
 ```
 
 ## Usage
