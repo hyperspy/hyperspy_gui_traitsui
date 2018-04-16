@@ -58,7 +58,8 @@ elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
     set_ets_toolkit("null")
-    if preferences.GUIs.warn_if_guis_are_missing:
+    if (not hasattr(preferences.GUIs, "warn_if_guis_are_missing") # hspy < v.1.3.1
+        or preferences.GUIs.warn_if_guis_are_missing):
         _logger.warning(
             "The {} matplotlib backend is not supported by the "
             "installed traitsui version and the ETS toolkit has been set to null. "
