@@ -30,6 +30,10 @@ _logger = logging.getLogger(__name__)
 _logger.debug("Initial ETS toolkit set to {}".format(ETSConfig.toolkit))
 
 
+WARN = (
+    not hasattr(preferences.GUIs, "warn_if_guis_are_missing") # hspy < v.1.3.1
+    or preferences.GUIs.warn_if_guis_are_missing)
+
 def set_ets_toolkit(toolkit):
     try:
         if ETSConfig.toolkit == "":
@@ -58,8 +62,7 @@ elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
     set_ets_toolkit("null")
-    if (not hasattr(preferences.GUIs, "warn_if_guis_are_missing") # hspy < v.1.3.1
-        or preferences.GUIs.warn_if_guis_are_missing):
+    if WARN:
         _logger.warning(
             "The {} matplotlib backend is not supported by the "
             "installed traitsui version and the ETS toolkit has been set to null. "
@@ -75,6 +78,5 @@ if ETSConfig.toolkit and ETSConfig.toolkit != "null":
     import hyperspy_gui_traitsui.preferences
     import hyperspy_gui_traitsui.microscope_parameters
     import hyperspy_gui_traitsui.messages
-else:
-    if preferences.GUIs.warn_if_guis_are_missing:
-        _logger.warning("The traitsui GUI elements are not available.")
+elif WARN:
+    _logger.warning("The traitsui GUI elements are not available.")
