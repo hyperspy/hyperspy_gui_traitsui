@@ -29,7 +29,7 @@ def fit_component_tratisui(obj, **kwargs):
     return obj, {"view": fit_component_view}
 
 
-class SetCorelossEdgeOnsetHandler(SpanSelectorInSignal1DHandler):
+class EstimateAndSetCorelossEdgeOnsetHandler(SpanSelectorInSignal1DHandler):
 
     def fit(self, info):
         """Handles the **Apply** button being clicked.
@@ -40,14 +40,15 @@ class SetCorelossEdgeOnsetHandler(SpanSelectorInSignal1DHandler):
         return
 
 
-@register_traitsui_widget(toolkey="EELSModel.set_coreloss_edge_onset")
+@register_traitsui_widget(
+        toolkey="EELSModel.estimate_and_set_coreloss_edge_onset")
 @add_display_arg
-def set_coreloss_edge_onset_traitsui(obj, **kwargs):
-    set_coreloss_edge_onset_view = tu.View(
+def estimate_and_set_coreloss_edge_onset_traitsui(obj, **kwargs):
+    estimate_and_set_coreloss_edge_onset_view = tu.View(
         tu.Item('percent_position', show_label=True,),
         tu.Item('only_current', show_label=True,),
         buttons=[OurFitButton, OurCloseButton],
         title='Set edge onset',
-        handler=SetCorelossEdgeOnsetHandler,
+        handler=EstimateAndSetCorelossEdgeOnsetHandler,
     )
-    return obj, {"view": set_coreloss_edge_onset_view}
+    return obj, {"view": estimate_and_set_coreloss_edge_onset_view}
