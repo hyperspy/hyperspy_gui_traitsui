@@ -18,6 +18,8 @@ PREFERENCES_VIEW = tui.View(
               label='General'),
     tui.Group(tui.Item('GUIs', style='custom', show_label=False, ),
               label='GUIs'),
+    tui.Group(tui.Item('Plot', style='custom', show_label=False, ),
+              label='Plot'),
     tui.Group(tui.Item('EELS', style='custom', show_label=False, ),
               label='EELS'),
     tui.Group(tui.Item('EDS', style='custom', show_label=False, ),
