@@ -282,6 +282,7 @@ def remove_background_traitsui(obj, **kwargs):
         tu.Group(
             'background_type',
             'fast',
+            'zero_fill',
             tu.Group(
                 'polynomial_order',
                 visible_when='background_type == \'Polynomial\''), ),
