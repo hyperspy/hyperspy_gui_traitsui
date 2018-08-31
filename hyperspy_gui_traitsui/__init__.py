@@ -67,7 +67,9 @@ elif ETSConfig.toolkit == "":
             "The {} matplotlib backend is not supported by the "
             "installed traitsui version and the ETS toolkit has been set to null. "
             "To set the ETS toolkit independently from the matplotlib backend, "
-            "set it before importing matplotlib.".format(matplotlib.get_backend()))
+            "set it before importing matplotlib. See "
+            "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html "
+            "for more information.".format(matplotlib.get_backend()))
 
 if ETSConfig.toolkit and ETSConfig.toolkit != "null":
     import hyperspy.api_nogui # necessary to register the toolkeys
