@@ -285,7 +285,7 @@ def remove_background_traitsui(obj, **kwargs):
             'zero_fill',
             tu.Group(
                 'polynomial_order',
-                visible_when='background_type == \'Polynomial\''), ),
+                visible_when='background_type == "Polynomial"'), ),
         buttons=[OKButton, CancelButton],
         handler=SpanSelectorInSignal1DHandler,
         title='Background removal tool',
@@ -377,7 +377,7 @@ def spikes_removal_traitsui(obj, **kwargs):
             'default_spike_width',
             tu.Group(
                 'spline_order',
-                enabled_when='interpolator_kind == \'Spline\''),
+                enabled_when='interpolator_kind == "Spline"'),
             show_border=True,
             label='Advanced settings'),
     ),
@@ -388,5 +388,88 @@ def spikes_removal_traitsui(obj, **kwargs):
         handler=SpikesRemovalHandler,
         title='Spikes removal tool',
         resizable=False,
+    )
+    return obj, {"view": view}
+
+
+class FindPeaks2DHandler(tu.Handler):
+
+    def ok(self, info, is_ok):
+        self.close(info, True)
+        return True
+    
+    def close(self, info, is_ok=False):
+        obj = info.object
+        obj.signal._plot.close()
+        info.object.close()
+        return True
+
+    def compute_navigation(self, info):
+        """Handles the **Apply** button being clicked.
+
+        """
+        obj = info.object
+        obj.compute_navigation()
+        return
+
+
+@register_traitsui_widget(toolkey="Signal2D.find_peaks2D")
+@add_display_arg
+def find_peaks2D_traitsui(obj, **kwargs):
+
+    thisOKButton = tu.Action(name="OK",
+                             action="OK",
+                             tooltip="Close the peaks finder tool.")
+
+    ComputeButton = tu.Action(name="Compute over navigation axes",
+                                action="compute_navigation",
+                                tooltip="Find the peaks by iterating over \n"
+                                "the navigation axes.")
+    view = tu.View(
+        tu.Group(
+            'method',
+            tu.Group(
+                'local_max_distance',
+                'local_max_threshold',
+                visible_when='method == "Local max"'),
+            tu.Group(
+                'max_alpha',
+                'max_size',
+                visible_when='method == "Max"'),
+            tu.Group(
+                'minmax_separation',
+                'minmax_threshold',
+                visible_when='method == "Minmax"'),
+            tu.Group(
+                'zaefferer_grad_threshold',
+                'zaefferer_window_size',
+                'zaefferer_distance_cutoff',
+                visible_when='method == "Zaefferer"'),
+            tu.Group(
+                'stat_alpha',
+                'stat_window_radius',
+                'stat_convergence_ratio',
+                visible_when='method == "Stat"'),
+            tu.Group(
+                'log_min_sigma',
+                'log_max_sigma',
+                'log_num_sigma',
+                'log_threshold',
+                'log_overlap',
+                'log_log_scale',
+                visible_when="method == 'Laplacian of Gaussian'"),
+            tu.Group(
+                'dog_min_sigma',
+                'dog_max_sigma',
+                'dog_sigma_ratio',
+                'dog_threshold',
+                'dog_overlap',
+                visible_when="method == 'Difference of Gaussian'"), ),
+        buttons=[ComputeButton,
+                 thisOKButton],
+        handler=FindPeaks2DHandler,
+        title='Find Peaks 2D',
+        resizable=True,
+        width=400,
     )
     return obj, {"view": view}
