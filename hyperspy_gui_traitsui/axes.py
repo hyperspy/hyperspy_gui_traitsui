@@ -56,6 +56,38 @@ def navigation_sliders(obj, title=None, **kwargs):
     return nav, {}
 
 
+
+def get_navigation_sliders_group(obj):
+    """Raises a windows with sliders to control the index of DataAxis
+
+    Parameters
+    ----------
+    obj : list of DataAxis instances
+
+    """
+    axis_group_args = []
+    context = {}
+
+    def get_axis_label(axis):
+        return (axis.name if axis.name != t.Undefined 
+                else f"Axis {axis.index_in_axes_manager}")
+
+    for i, axis in enumerate(obj):
+        axis_group_args.append(tui.Item(f'axis{i}.value',
+                                        label=get_axis_label(axis),
+                                        editor=tui.RangeEditor(
+                                                low_name=f'axis{i}.low_value',
+                                                high_name=f'axis{i}.high_value',
+                                                label_width=28,
+                                                mode='auto')))
+        context[f'axis{i}'] = axis
+
+    axis_group = tui.Group(*axis_group_args,
+                           show_border=False,)
+
+    return axis_group, context
+
+
 def get_data_axis_view(navigate, label):
     group_args = [
         tui.Item(name='name'),

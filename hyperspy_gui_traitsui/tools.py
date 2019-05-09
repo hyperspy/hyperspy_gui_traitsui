@@ -4,6 +4,7 @@ import traitsui.api as tu
 from hyperspy_gui_traitsui.buttons import *
 from hyperspy_gui_traitsui.utils import (
     register_traitsui_widget, add_display_arg)
+from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
 
 
 class SmoothingHandler(tu.Handler):
@@ -397,7 +398,7 @@ class FindPeaks2DHandler(tu.Handler):
     def ok(self, info, is_ok):
         self.close(info, True)
         return True
-    
+
     def close(self, info, is_ok=False):
         obj = info.object
         obj.signal._plot.close()
@@ -405,71 +406,104 @@ class FindPeaks2DHandler(tu.Handler):
         return True
 
     def compute_navigation(self, info):
-        """Handles the **Apply** button being clicked.
+        """Handles the **Compute** button being clicked.
 
         """
         obj = info.object
         obj.compute_navigation()
         return
 
+    def random_navigation_index(self, info):
+        """Handles the **Random navigation index** button being clicked.
+
+        """
+        obj = info.object
+        obj.set_random_navigation_index()
+        return
+
 
 @register_traitsui_widget(toolkey="Signal2D.find_peaks2D")
 @add_display_arg
-def find_peaks2D_traitsui(obj, **kwargs):
-
+def find_peaks2D_traitsui(obj, **kwargs):   
     thisOKButton = tu.Action(name="OK",
-                             action="OK",
-                             tooltip="Close the peaks finder tool.")
+                              action="OK",
+                              tooltip="Close the peaks finder tool.")
 
     ComputeButton = tu.Action(name="Compute over navigation axes",
-                                action="compute_navigation",
-                                tooltip="Find the peaks by iterating over \n"
+                              action="compute_navigation",
+                              tooltip="Find the peaks by iterating over \n"
                                 "the navigation axes.")
+   
+    axis_group, context = get_navigation_sliders_group(
+            obj.signal.axes_manager.navigation_axes)
+
     view = tu.View(
         tu.Group(
-            'method',
+            tu.Group(axis_group,
+                    tu.Item('obj.random_navigation_position',
+                            show_label=False,
+                            name='Set navigation index randomly',
+                            tooltip='Set the navigation index to a random \n'
+                              'value.',),
+                    visible_when='show_navigation_sliders==True',
+                    label='Navigator',
+                    show_border=True),
+            tu.Item('obj.method',
+                    show_label=True),
             tu.Group(
-                'local_max_distance',
-                'local_max_threshold',
-                visible_when='method == "Local max"'),
+                    'obj.local_max_distance',
+                    'obj.local_max_threshold',
+                    visible_when='obj.method == "Local max"',
+                    show_border=True),
             tu.Group(
-                'max_alpha',
-                'max_size',
-                visible_when='method == "Max"'),
+                'obj.max_alpha',
+                'obj.max_size',
+                visible_when='obj.method == "Max"',
+                label='Method parameters',
+                show_border=True),
             tu.Group(
-                'minmax_separation',
-                'minmax_threshold',
-                visible_when='method == "Minmax"'),
+                'obj.minmax_separation',
+                'obj.minmax_threshold',
+                visible_when='obj.method == "Minmax"',
+                show_border=True),
             tu.Group(
-                'zaefferer_grad_threshold',
-                'zaefferer_window_size',
-                'zaefferer_distance_cutoff',
-                visible_when='method == "Zaefferer"'),
+                'obj.zaefferer_grad_threshold',
+                'obj.zaefferer_window_size',
+                'obj.zaefferer_distance_cutoff',
+                visible_when='obj.method == "Zaefferer"',
+                show_border=True),
             tu.Group(
-                'stat_alpha',
-                'stat_window_radius',
-                'stat_convergence_ratio',
-                visible_when='method == "Stat"'),
+                'obj.stat_alpha',
+                'obj.stat_window_radius',
+                'obj.stat_convergence_ratio',
+                visible_when='obj.method == "Stat"',
+                show_border=False),
             tu.Group(
-                'log_min_sigma',
-                'log_max_sigma',
-                'log_num_sigma',
-                'log_threshold',
-                'log_overlap',
-                'log_log_scale',
-                visible_when="method == 'Laplacian of Gaussian'"),
+                'obj.log_min_sigma',
+                'obj.log_max_sigma',
+                'obj.log_num_sigma',
+                'obj.log_threshold',
+                'obj.log_overlap',
+                'obj.log_log_scale',
+                visible_when="obj.method == 'Laplacian of Gaussian'",
+                show_border=False),
             tu.Group(
-                'dog_min_sigma',
-                'dog_max_sigma',
-                'dog_sigma_ratio',
-                'dog_threshold',
-                'dog_overlap',
-                visible_when="method == 'Difference of Gaussian'"), ),
+                'obj.dog_min_sigma',
+                'obj.dog_max_sigma',
+                'obj.dog_sigma_ratio',
+                'obj.dog_threshold',
+                'obj.dog_overlap',
+                visible_when="obj.method == 'Difference of Gaussian'",
+                show_border=False),
+            show_border=True),
         buttons=[ComputeButton,
                  thisOKButton],
         handler=FindPeaks2DHandler,
         title='Find Peaks 2D',
         resizable=True,
-        width=400,
+        width=500,
     )
-    return obj, {"view": view}
+
+    context.update({"obj":obj})
+
+    return obj, {"view": view, "context": context}
