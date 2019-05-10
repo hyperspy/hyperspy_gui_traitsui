@@ -2,7 +2,7 @@ import traits.api as t
 import traitsui.api as tui
 
 from hyperspy_gui_traitsui.utils import register_traitsui_widget, add_display_arg
-from hyperspy.misc.utils import isiterable, ordinal
+from hyperspy.misc.utils import ordinal
 
 
 def get_axis_label(axis):

@@ -395,45 +395,33 @@ def spikes_removal_traitsui(obj, **kwargs):
 
 class FindPeaks2DHandler(tu.Handler):
 
-    def ok(self, info, is_ok):
-        self.close(info, True)
-        return True
-
     def close(self, info, is_ok=False):
-        obj = info.object
+        obj = info.obj
         obj.signal._plot.close()
-        info.object.close()
+        info.obj.close(info, True)
         return True
 
     def compute_navigation(self, info):
         """Handles the **Compute** button being clicked.
 
         """
-        obj = info.object
+        obj = info.obj
         obj.compute_navigation()
-        return
-
-    def random_navigation_index(self, info):
-        """Handles the **Random navigation index** button being clicked.
-
-        """
-        obj = info.object
-        obj.set_random_navigation_index()
         return
 
 
 @register_traitsui_widget(toolkey="Signal2D.find_peaks2D")
 @add_display_arg
 def find_peaks2D_traitsui(obj, **kwargs):   
-    thisOKButton = tu.Action(name="OK",
-                              action="OK",
-                              tooltip="Close the peaks finder tool.")
+    thisCloseButton = tu.Action(name="Close",
+                             action="close",
+                             tooltip="Close the peaks finder tool.")
 
     ComputeButton = tu.Action(name="Compute over navigation axes",
                               action="compute_navigation",
                               tooltip="Find the peaks by iterating over \n"
                                 "the navigation axes.")
-   
+
     axis_group, context = get_navigation_sliders_group(
             obj.signal.axes_manager.navigation_axes)
 
@@ -497,7 +485,7 @@ def find_peaks2D_traitsui(obj, **kwargs):
                 show_border=False),
             show_border=True),
         buttons=[ComputeButton,
-                 thisOKButton],
+                 thisCloseButton],
         handler=FindPeaks2DHandler,
         title='Find Peaks 2D',
         resizable=True,
