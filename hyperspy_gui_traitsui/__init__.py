@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with  HyperSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "1.2.dev"
+from hyperspy_gui_traitsui.version import __version__
 import logging
 
 import matplotlib
