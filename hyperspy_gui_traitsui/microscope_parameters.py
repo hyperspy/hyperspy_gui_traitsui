@@ -1,8 +1,7 @@
 import traitsui.api as tu
 from traitsui.menu import OKButton, CancelButton
 
-from hyperspy_gui_traitsui.utils import (
-    add_display_arg, register_traitsui_widget)
+from hyperspy_gui_traitsui.utils import add_display_arg
 from hyperspy_gui_traitsui.buttons import StoreButton
 
 
@@ -13,7 +12,6 @@ class SetMetadataItemsHandler(tu.Handler):
         return True
 
 
-@register_traitsui_widget(toolkey="microscope_parameters_EDS_SEM")
 @add_display_arg
 def microscope_parameters_EDS_SEM(obj, **kwargs):
     view = tu.View(
@@ -29,7 +27,6 @@ def microscope_parameters_EDS_SEM(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="microscope_parameters_EDS_TEM")
 @add_display_arg
 def microscope_parameters_EDS_TEM(obj, **kwargs):
     view = tu.View(
@@ -46,7 +43,6 @@ def microscope_parameters_EDS_TEM(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="microscope_parameters_EELS")
 @add_display_arg
 def microscope_parameters_EELS(obj, **kwargs):
     view = tu.View(
