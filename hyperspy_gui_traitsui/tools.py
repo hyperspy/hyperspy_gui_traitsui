@@ -110,6 +110,15 @@ class ImageContrastHandler(tu.Handler):
 
         return
 
+    def show_help(self, info):
+        """Handles the **Help** button being clicked.
+
+        """
+        obj = info.object
+        obj._show_help_fired()
+
+        return
+
     def reset(self, info):
         """Handles the **Reset** button being clicked.
 
@@ -254,11 +263,17 @@ def image_constast_editor_traitsui(obj, **kwargs):
                            label='vmax',
                            show_label=True,
                            style='readonly'),
+                   tu.Item('gamma',
+                           label='gamma',
+                           show_label=True),
+                   tu.Item('auto',
+                           label='auto',
+                           show_label=True),
                    handler=ImageContrastHandler,
                    buttons=[OKButton,
+                            HelpButton,
                             OurApplyButton,
-                            OurResetButton,
-                            CancelButton, ],
+                            OurResetButton,],
                    title='Constrast adjustment tool',
                    )
     return obj, {"view": view}
