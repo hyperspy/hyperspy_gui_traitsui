@@ -22,10 +22,11 @@ Install anaconda for your platform and run
 
 ```bash
 conda install hyperspy-gui-traitsui -c conda-forge
+```
 
 ## Usage
 
-Please refer to the [HyperSpy documentation](http://hyperspy.org/hyperspy-doc/current/index.html) for details. Example (to run in any IPython flavour):
+Please refer to the [HyperSpy documentation](http://hyperspy.org/hyperspy-doc/current/index.html) for details. Example (to run in any jupyter flavour):
 
 ```python
 %matplotlib qt
