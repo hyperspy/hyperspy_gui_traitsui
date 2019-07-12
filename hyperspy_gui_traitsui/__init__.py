@@ -64,9 +64,9 @@ elif ETSConfig.toolkit == "":
     if WARN:
         _logger.warning(
             f"The {backend} matplotlib backend is not compatible with the "
-            "traitsui GUI elements. See "
-            "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html "
-            "for more information.")
+            "traitsui GUI elements. For more information, read "
+            "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html#possible-warning-when-importing-hyperspy"
+            ".")
 
 if ETSConfig.toolkit and ETSConfig.toolkit != "null":
     import hyperspy.api_nogui # necessary to register the toolkeys
