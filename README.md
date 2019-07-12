@@ -1,6 +1,14 @@
-# hyperspy_gui_traitsui
-[![Build Status](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui.svg?branch=master)](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui)
 
+|Travis|_ |pypi_version|_ |python_version|_
+
+.. |Travis| image:: https://travis-ci.org/hyperspy/hyperspy_gui_traitsui.svg?branch=master
+.. _Travis: https://travis-ci.org/hyperspy/hyperspy_gui_traitsui
+
+.. |pypi_version| image:: http://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg?style=flat
+.. _pypi_version: https://pypi.python.org/pypi/hyperspy_gui_traitsui
+
+.. |python_version| image:: https://img.shields.io/pypi/pyversions/hyperspy_gui_traitsui.svg?style=flat
+.. _python_version: https://pypi.python.org/pypi/hyperspy_gui_traitsui
 
 
 **hyperspy_gui_traitsui** provides traitsui graphic user interface (GUI) elements for hyperspy.
