@@ -1,14 +1,6 @@
-
-|Travis|_ |pypi_version|_ |python_version|_
-
-.. |Travis| image:: https://travis-ci.org/hyperspy/hyperspy_gui_traitsui.svg?branch=master
-.. _Travis: https://travis-ci.org/hyperspy/hyperspy_gui_traitsui
-
-.. |pypi_version| image:: http://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg?style=flat
-.. _pypi_version: https://pypi.python.org/pypi/hyperspy_gui_traitsui
-
-.. |python_version| image:: https://img.shields.io/pypi/pyversions/hyperspy_gui_traitsui.svg?style=flat
-.. _python_version: https://pypi.python.org/pypi/hyperspy_gui_traitsui
+[![Build Status](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui.svg?branch=master)](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui)
+![PyPI](https://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hyperspy_gui_traitsui.svg)
 
 
 **hyperspy_gui_traitsui** provides traitsui graphic user interface (GUI) elements for hyperspy.
@@ -16,7 +8,7 @@
 
 ## Installation
 
-# Option 1: With pip
+### Option 1: With pip
 Make sure you have
 [pip installed](https://pip.pypa.io/en/stable/installing/) and run:
 
@@ -24,7 +16,7 @@ Make sure you have
 pip install hyperspy_gui_traitsui
 ```
 
-# Option 2: With Anaconda
+### Option 2: With Anaconda
 
 Install anaconda for your platform and run
 
