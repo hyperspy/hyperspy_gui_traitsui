@@ -256,11 +256,11 @@ def load(obj, **kwargs):
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
     view = tu.View(tu.Item('ss_left_value',
-                           label='Vmin',
+                           label='Min',
                            show_label=True,
                            style='readonly',),
                    tu.Item('ss_right_value',
-                           label='Vmax',
+                           label='Max',
                            show_label=True,
                            style='readonly'),
                    tu.Item('bins',
@@ -269,13 +269,28 @@ def image_constast_editor_traitsui(obj, **kwargs):
                    tu.Item('norm',
                            label='Norm',
                            show_label=True),
+                   tu.Item('saturated_pixels',
+                           label='Saturated_pixels',
+                           show_label=True,
+                           # Not working because it reset the bounds value
+                           # editor=tu.RangeEditor(format='%.2f',
+                           #                       label_width=28)
+                           ),
                    tu.Item('gamma',
                            label='Gamma',
                            show_label=True,
-                           enabled_when='norm == "Power" or norm == "Auto"'),
-                   tu.Item('saturated_pixels',
-                           label='Saturated_pixels',
-                           show_label=True),
+                           visible_when='norm == "Power" or norm == "Auto"',
+                           ),
+                   tu.Item('linthresh',
+                           label='Linear threshold',
+                           show_label=True,
+                           visible_when='norm == "Log" and obj.negative_values_displayed',
+                           ),
+                   tu.Item('linscale',
+                           label='Linear scale',
+                           show_label=True,
+                           visible_when='norm == "Log" and obj.negative_values_displayed',
+                           ),
                    tu.Item('auto',
                            label='Auto',
                            show_label=True),
@@ -285,7 +300,7 @@ def image_constast_editor_traitsui(obj, **kwargs):
                             OurApplyButton,
                             OurResetButton,],
                    title='Constrast adjustment tool',
-                   )
+                   resizable=True)
     return obj, {"view": view}
 
 
