@@ -109,6 +109,15 @@ class ImageContrastHandler(tu.Handler):
 
         return
 
+    def show_help(self, info):
+        """Handles the **Help** button being clicked.
+
+        """
+        obj = info.object
+        obj._show_help_fired()
+
+        return
+
     def reset(self, info):
         """Handles the **Reset** button being clicked.
 
@@ -237,21 +246,64 @@ def load(obj, **kwargs):
 
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
-    view = tu.View(tu.Item('ss_left_value',
-                           label='vmin',
-                           show_label=True,
-                           style='readonly',),
-                   tu.Item('ss_right_value',
-                           label='vmax',
-                           show_label=True,
-                           style='readonly'),
-                   handler=ImageContrastHandler,
-                   buttons=[OKButton,
-                            OurApplyButton,
-                            OurResetButton,
-                            CancelButton, ],
-                   title='Constrast adjustment tool',
-                   )
+
+    view = tu.View(
+        tu.Group(
+            tu.Item('ss_left_value',
+                    label='Min',
+                    show_label=True,
+                    style='readonly',),
+            tu.Item('ss_right_value',
+                    label='Max',
+                    show_label=True,
+                    style='readonly'),
+            show_border=True
+            ),
+        tu.Group(
+            tu.Item('bins',
+                    label='Bins',
+                    show_label=True),
+            tu.Item('norm',
+                    label='Norm',
+                    show_label=True),
+            tu.Item('saturated_pixels',
+                    label='Saturated pixels',
+                    show_label=True,
+                    # Not working because it set the bounds value to 0-1
+                    # editor=tu.RangeEditor(format='%.2f',
+                    #                       label_width=28)
+                    ),
+            tu.Item('auto',
+                    label='Auto',
+                    show_label=True),
+            show_border=True,
+            ),
+        tu.Group(
+            tu.Item('gamma',
+                    label='Gamma',
+                    show_label=True,
+                    visible_when='norm == "Power"',
+                    ),
+            tu.Item('linthresh',
+                    label='Linear threshold',
+                    show_label=True,
+                    visible_when='norm == "Symlog"',
+                    ),
+            tu.Item('linscale',
+                    label='Linear scale',
+                    show_label=True,
+                    visible_when='norm == "Symlog"',
+                    ),
+            show_border=True,
+            ),
+        tu.Item('_'),
+        handler=ImageContrastHandler,
+        buttons=[OKButton,
+                 HelpButton,
+                 OurApplyButton,
+                 OurResetButton,],
+        title='Constrast adjustment tool',
+        resizable=True)
     return obj, {"view": view}
 
 

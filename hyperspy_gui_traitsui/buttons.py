@@ -26,3 +26,6 @@ StoreButton = tu.Action(name="Store",
 
 SaveButton = tu.Action(name="Save",
                        action="save")
+
+HelpButton = tu.Action(name="Help",
+                       action="show_help")
