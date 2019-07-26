@@ -1,6 +1,5 @@
 import functools
 
-from hyperspy.ui_registry import register_widget
 
 
 def add_display_arg(f):
