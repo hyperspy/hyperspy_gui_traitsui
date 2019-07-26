@@ -2,8 +2,7 @@ import traitsui.api as tui
 from traitsui.menu import CancelButton
 
 from hyperspy_gui_traitsui.buttons import SaveButton
-from hyperspy_gui_traitsui.utils import (
-    register_traitsui_widget, add_display_arg)
+from hyperspy_gui_traitsui.utils import add_display_arg
 
 
 class PreferencesHandler(tui.Handler):
@@ -29,7 +28,6 @@ PREFERENCES_VIEW = tui.View(
     handler=PreferencesHandler,)
 
 
-@register_traitsui_widget(toolkey="Preferences")
 @add_display_arg
 def preferences_traitsui(obj, **kwargs):
     obj.trait_view("traits_view", PREFERENCES_VIEW)

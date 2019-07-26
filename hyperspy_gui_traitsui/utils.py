@@ -1,10 +1,5 @@
 import functools
 
-from hyperspy.ui_registry import register_widget
-
-
-register_traitsui_widget = functools.partial(
-    register_widget, toolkit="traitsui")
 
 
 def add_display_arg(f):
