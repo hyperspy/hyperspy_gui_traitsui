@@ -76,7 +76,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['hyperspy>=1.5.dev', 'traitsui>=6.0'],
+    install_requires=['hyperspy>=1.5', 'traitsui>=6.0'],
     entry_points={'hyperspy.extensions': 'hyperspy-gui-traitsui = hyperspy_gui_traitsui'},
     package_data={  # Optional
         'hyperspy_gui_traitsui': ['hyperspy_extension.yaml'], },
