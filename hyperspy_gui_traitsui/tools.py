@@ -450,7 +450,6 @@ class FindPeaks2DHandler(tu.Handler):
         return
 
 
-@register_traitsui_widget(toolkey="Signal2D.find_peaks2D")
 @add_display_arg
 def find_peaks2D_traitsui(obj, **kwargs):   
     thisCloseButton = tu.Action(name="Close",
