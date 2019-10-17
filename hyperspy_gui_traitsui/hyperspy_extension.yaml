@@ -1,0 +1,63 @@
+GUI:
+  widgets:
+    traitsui:
+      hyperspy.interactive_range_selector:
+        module: hyperspy_gui_traitsui.tools
+        function: interactive_range_selector
+      hyperspy.navigation_sliders:
+        module: hyperspy_gui_traitsui.axes
+        function: navigation_sliders
+      hyperspy.load:
+        module: hyperspy_gui_traitsui.tools
+        function: load
+      hyperspy.Preferences:
+        module: hyperspy_gui_traitsui.preferences
+        function: preferences_traitsui
+      hyperspy.DataAxis:
+        module: hyperspy_gui_traitsui.axes
+        function: data_axis_traitsui
+      hyperspy.AxesManager:
+        module: hyperspy_gui_traitsui.axes
+        function: axes_gui
+      hyperspy.Signal1D.calibrate:
+        module: hyperspy_gui_traitsui.tools
+        function: calibration_traitsui
+      hyperspy.Signal1D.smooth_savitzky_golay:
+        module: hyperspy_gui_traitsui.tools
+        function: smooth_savitzky_golay_traitsui
+      hyperspy.Signal1D.smooth_lowess:
+        module: hyperspy_gui_traitsui.tools
+        function: smooth_lowess_traitsui
+      hyperspy.Signal1D.smooth_total_variation:
+        module: hyperspy_gui_traitsui.tools
+        function: smooth_tv_traitsui
+      hyperspy.Signal1D.smooth_butterworth:
+        module: hyperspy_gui_traitsui.tools
+        function: smooth_butterworth
+      hyperspy.Signal1D.contrast_editor:
+        module: hyperspy_gui_traitsui.tools
+        function: image_constast_editor_traitsui
+      hyperspy.Signal1D.integrate_in_range:
+        module: hyperspy_gui_traitsui.tools
+        function: integrate_in_range_traitsui
+      hyperspy.Signal1D.remove_background:
+        module: hyperspy_gui_traitsui.tools
+        function: remove_background_traitsui
+      hyperspy.SimpleMessage:
+        module: hyperspy_gui_traitsui.messages
+        function: simple_message
+      hyperspy.Signal1D.spikes_removal_tool:
+        module: hyperspy_gui_traitsui.tools
+        function: spikes_removal_traitsui
+      hyperspy.Model1D.fit_component:
+        module: hyperspy_gui_traitsui.model
+        function: fit_component_tratisui
+      hyperspy.microscope_parameters_EELS:
+        module: hyperspy_gui_traitsui.microscope_parameters
+        function: microscope_parameters_EELS
+      hyperspy.microscope_parameters_EDS_SEM:
+        module: hyperspy_gui_traitsui.microscope_parameters
+        function: microscope_parameters_EDS_SEM
+      hyperspy.microscope_parameters_EDS_TEM:
+        module: hyperspy_gui_traitsui.microscope_parameters
+        function: microscope_parameters_EDS_TEM

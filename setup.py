@@ -19,13 +19,19 @@ except (ImportError, OSError):
     with open(path.join(here, 'README.md'), encoding='utf-8') as f:
         long_description = f.read()
 
+
+version = {}
+with open(path.join(here, "hyperspy_gui_traitsui", "version.py")) as fp:
+    exec(fp.read(), version)
+
+
 setup(
     name='hyperspy_gui_traitsui',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.1.0',
+    version=version['__version__'],
 
     description=('traitsui GUI elements for HyperSpy.'),
     long_description=long_description,
@@ -43,6 +49,8 @@ setup(
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Science/Research",
@@ -68,13 +76,8 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['hyperspy>=1.4.dev', 'traitsui>=6.0'],
-
-    # List additional groups of dependencies here (e.g. development
-    # dependencies). You can install these using the following syntax,
-    # for example:
-    # $ pip install -e .[dev,test]
-    # extras_require={
-    #     'test': ['pytest'],
-    # },
-)
+    install_requires=['hyperspy>=1.5', 'traitsui>=6.0'],
+    entry_points={'hyperspy.extensions': 'hyperspy-gui-traitsui = hyperspy_gui_traitsui'},
+    package_data={  # Optional
+        'hyperspy_gui_traitsui': ['hyperspy_extension.yaml'], },
+        )

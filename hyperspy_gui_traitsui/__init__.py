@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with  HyperSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "1.2.dev"
+from hyperspy_gui_traitsui.version import __version__
+
 import logging
 
 import matplotlib
@@ -51,7 +52,7 @@ def set_ets_toolkit(toolkit):
         set_ets_toolkit("null")
 
 # Get the backend from matplotlib
-backend = matplotlib.rcParams["backend"]
+backend = matplotlib.get_backend()
 _logger.debug('Loading hyperspy.traitsui_gui')
 _logger.debug('Current MPL backend: %s', backend)
 if "WX" in backend:
@@ -64,12 +65,10 @@ elif ETSConfig.toolkit == "":
     set_ets_toolkit("null")
     if WARN:
         _logger.warning(
-            "The {} matplotlib backend is not supported by the "
-            "installed traitsui version and the ETS toolkit has been set to null. "
-            "To set the ETS toolkit independently from the matplotlib backend, "
-            "set it before importing matplotlib. See "
-            "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html "
-            "for more information.".format(matplotlib.get_backend()))
+            f"The {backend} matplotlib backend is not compatible with the "
+            "traitsui GUI elements. For more information, read "
+            "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html#possible-warnings-when-importing-hyperspy"
+            ".")
 
 if ETSConfig.toolkit and ETSConfig.toolkit != "null":
     import hyperspy.api_nogui # necessary to register the toolkeys

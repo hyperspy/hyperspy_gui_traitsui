@@ -2,8 +2,7 @@ from traitsui.menu import (OKButton, CancelButton, OKCancelButtons)
 import traitsui.api as tu
 
 from hyperspy_gui_traitsui.buttons import *
-from hyperspy_gui_traitsui.utils import (
-    register_traitsui_widget, add_display_arg)
+from hyperspy_gui_traitsui.utils import add_display_arg
 from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
 
 
@@ -111,6 +110,15 @@ class ImageContrastHandler(tu.Handler):
 
         return
 
+    def show_help(self, info):
+        """Handles the **Help** button being clicked.
+
+        """
+        obj = info.object
+        obj._show_help_fired()
+
+        return
+
     def reset(self, info):
         """Handles the **Reset** button being clicked.
 
@@ -120,7 +128,6 @@ class ImageContrastHandler(tu.Handler):
         return
 
 
-@register_traitsui_widget(toolkey="Signal1D.calibrate")
 @add_display_arg
 def calibration_traitsui(obj, **kwargs):
     view = tu.View(
@@ -145,7 +152,6 @@ def calibration_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="interactive_range_selector")
 @add_display_arg
 def interactive_range_selector(obj, **kwargs):
     view = tu.View(
@@ -156,7 +162,6 @@ def interactive_range_selector(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.smooth_savitzky_golay")
 @add_display_arg
 def smooth_savitzky_golay_traitsui(obj, **kwargs):
     view = tu.View(
@@ -187,7 +192,6 @@ def smooth_savitzky_golay_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.smooth_lowess")
 @add_display_arg
 def smooth_lowess_traitsui(obj, **kwargs):
     view = tu.View(
@@ -203,7 +207,6 @@ def smooth_lowess_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.smooth_total_variation")
 @add_display_arg
 def smooth_tv_traitsui(obj, **kwargs):
     view = tu.View(
@@ -218,7 +221,6 @@ def smooth_tv_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.smooth_butterworth")
 @add_display_arg
 def smooth_butterworth(obj, **kwargs):
     view = tu.View(
@@ -233,7 +235,6 @@ def smooth_butterworth(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="load")
 @add_display_arg
 def load(obj, **kwargs):
     view = tu.View(
@@ -244,28 +245,69 @@ def load(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.contrast_editor")
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
-    view = tu.View(tu.Item('ss_left_value',
-                           label='vmin',
-                           show_label=True,
-                           style='readonly',),
-                   tu.Item('ss_right_value',
-                           label='vmax',
-                           show_label=True,
-                           style='readonly'),
-                   handler=ImageContrastHandler,
-                   buttons=[OKButton,
-                            OurApplyButton,
-                            OurResetButton,
-                            CancelButton, ],
-                   title='Constrast adjustment tool',
-                   )
+
+    view = tu.View(
+        tu.Group(
+            tu.Item('ss_left_value',
+                    label='Min',
+                    show_label=True,
+                    style='readonly',),
+            tu.Item('ss_right_value',
+                    label='Max',
+                    show_label=True,
+                    style='readonly'),
+            show_border=True
+            ),
+        tu.Group(
+            tu.Item('bins',
+                    label='Bins',
+                    show_label=True),
+            tu.Item('norm',
+                    label='Norm',
+                    show_label=True),
+            tu.Item('saturated_pixels',
+                    label='Saturated pixels',
+                    show_label=True,
+                    # Not working because it set the bounds value to 0-1
+                    # editor=tu.RangeEditor(format='%.2f',
+                    #                       label_width=28)
+                    ),
+            tu.Item('auto',
+                    label='Auto',
+                    show_label=True),
+            show_border=True,
+            ),
+        tu.Group(
+            tu.Item('gamma',
+                    label='Gamma',
+                    show_label=True,
+                    visible_when='norm == "Power"',
+                    ),
+            tu.Item('linthresh',
+                    label='Linear threshold',
+                    show_label=True,
+                    visible_when='norm == "Symlog"',
+                    ),
+            tu.Item('linscale',
+                    label='Linear scale',
+                    show_label=True,
+                    visible_when='norm == "Symlog"',
+                    ),
+            show_border=True,
+            ),
+        tu.Item('_'),
+        handler=ImageContrastHandler,
+        buttons=[OKButton,
+                 HelpButton,
+                 OurApplyButton,
+                 OurResetButton,],
+        title='Constrast adjustment tool',
+        resizable=True)
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.integrate_in_range")
 @add_display_arg
 def integrate_in_range_traitsui(obj, **kwargs):
     view = tu.View(
@@ -276,7 +318,6 @@ def integrate_in_range_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
-@register_traitsui_widget(toolkey="Signal1D.remove_background")
 @add_display_arg
 def remove_background_traitsui(obj, **kwargs):
     view = tu.View(
@@ -335,7 +376,6 @@ class SpikesRemovalHandler(tu.Handler):
         return
 
 
-@register_traitsui_widget(toolkey="Signal1D.spikes_removal_tool")
 @add_display_arg
 def spikes_removal_traitsui(obj, **kwargs):
 
