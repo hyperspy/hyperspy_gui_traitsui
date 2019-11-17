@@ -1,7 +1,7 @@
 import traits.api as t
 import traitsui.api as tui
 
-from hyperspy_gui_traitsui.utils import register_traitsui_widget, add_display_arg
+from hyperspy_gui_traitsui.utils import add_display_arg
 from hyperspy.misc.utils import isiterable, ordinal
 
 
@@ -12,7 +12,6 @@ def get_axis_label(axis):
     return label
 
 
-@register_traitsui_widget(toolkey="navigation_sliders")
 @add_display_arg
 def navigation_sliders(obj, title=None, **kwargs):
     """Raises a windows with sliders to control the index of DataAxis
@@ -83,7 +82,6 @@ def get_data_axis_view(navigate, label):
     return data_axis_view
 
 
-@register_traitsui_widget(toolkey="DataAxis")
 @add_display_arg
 def data_axis_traitsui(obj, **kwargs):
     return obj, {"view": get_data_axis_view(
@@ -120,7 +118,6 @@ def get_axis_group(n, navigate, label=''):
     return group
 
 
-@register_traitsui_widget(toolkey="AxesManager")
 @add_display_arg
 def axes_gui(obj, **kwargs):
     context = {}
