@@ -61,3 +61,6 @@ GUI:
       hyperspy.microscope_parameters_EDS_TEM:
         module: hyperspy_gui_traitsui.microscope_parameters
         function: microscope_parameters_EDS_TEM
+      hyperspy.EELSModel.estimate_and_set_coreloss_edge_onset:
+        module: hyperspy_gui_traitsui.model
+        function: estimate_and_set_coreloss_edge_onset_traitsui

@@ -38,8 +38,6 @@ class EstimateAndSetCorelossEdgeOnsetHandler(SpanSelectorInSignal1DHandler):
         return
 
 
-@register_traitsui_widget(
-        toolkey="EELSModel.estimate_and_set_coreloss_edge_onset")
 @add_display_arg
 def estimate_and_set_coreloss_edge_onset_traitsui(obj, **kwargs):
     estimate_and_set_coreloss_edge_onset_view = tu.View(
