@@ -55,27 +55,31 @@ def navigation_sliders(obj, title=None, **kwargs):
     return nav, {}
 
 
-def get_data_axis_view(navigate, label):
+def get_data_axis_view(navigate, label, attribs = []):
     group_args = [
         tui.Item(name='name'),
         tui.Item(name='size', style='readonly'),
         tui.Item(name='index_in_array', style='readonly'),
         tui.Item(name='units'),
-
     ]
+    cal_args = [ ]
     if navigate:
         group_args.extend([
             tui.Item(name='index'),
             tui.Item(name='value', style='readonly'), ])
+    if 'scale' in attribs:
+        cal_args.extend([
+            tui.Item(name='scale'),
+            tui.Item(name='offset'), ])
+    if '_expression' in attribs:
+        cal_args.extend([
+            tui.Item(name='_expression', style='readonly'), ])
     data_axis_view = tui.View(
         tui.Group(
             tui.Group(*group_args,
                       show_border=True,),
-            tui.Group(
-                tui.Item(name='scale'),
-                tui.Item(name='offset'),
-                label='Calibration',
-                show_border=True,),
+            tui.Group(*cal_args,
+                      label='Calibration', show_border=True, ),
             # label="Data Axis properties",
             show_border=True,),
         title=label,)
@@ -86,10 +90,10 @@ def get_data_axis_view(navigate, label):
 def data_axis_traitsui(obj, **kwargs):
     return obj, {"view": get_data_axis_view(
         navigate=obj.navigate,
-        label=get_axis_label(obj))}
+        label=get_axis_label(obj), attribs=obj.__dict__.keys())}
 
 
-def get_axis_group(n, navigate, label=''):
+def get_axis_group(n, navigate, label='', attribs = []):
     group_args = [
         tui.Item('axis%i.name' % n),
         tui.Item('axis%i.size' % n, style='readonly'),
@@ -98,6 +102,7 @@ def get_axis_group(n, navigate, label=''):
         tui.Item('axis%i.high_index' % n, style='readonly'),
         tui.Item('axis%i.units' % n),
     ]
+    cal_args = [ ]
     # The style of the index is chosen to be readonly because of
     # a bug in Traits 4.0.0 when using context with a Range traits
     # where the limits are defined by another traits_view
@@ -105,14 +110,18 @@ def get_axis_group(n, navigate, label=''):
         group_args.extend([
             tui.Item('axis%i.index' % n, style='readonly'),
             tui.Item('axis%i.value' % n, style='readonly'), ])
+    if 'scale' in attribs:
+        cal_args.extend([
+            tui.Item('axis%i.scale' % n),
+            tui.Item('axis%i.offset' % n), ])
+    if '_expression' in attribs:
+        cal_args.extend([
+            tui.Item('axis%i._expression' % n, style='readonly'), ])
     group = tui.Group(
         tui.Group(*group_args,
                   show_border=True,),
-        tui.Group(
-            tui.Item('axis%i.scale' % n),
-            tui.Item('axis%i.offset' % n),
-            label='Calibration',
-            show_border=True,),
+        tui.Group(*cal_args,
+                  label='Calibration', show_border=True, ),
         label=label,
         show_border=True,)
     return group
@@ -124,7 +133,8 @@ def axes_gui(obj, **kwargs):
     ag = []
     for n, axis in enumerate(obj._get_axes_in_natural_order()):
         ag.append(get_axis_group(
-            n, label=get_axis_label(axis), navigate=axis.navigate))
+            n, label=get_axis_label(axis), navigate=axis.navigate, 
+            attribs=axis.__dict__.keys()))
         context['axis%i' % n] = axis
     ag = tuple(ag)
     obj.trait_view("traits_view", tui.View(*ag, title="Axes GUI"))
