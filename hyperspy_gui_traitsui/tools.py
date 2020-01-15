@@ -321,6 +321,22 @@ def integrate_in_range_traitsui(obj, **kwargs):
 def remove_background_traitsui(obj, **kwargs):
     view = tu.View(
         tu.Group(
+            tu.Item('ss_left_value',
+                    label='Left',
+                    style='readonly',
+                    format_str='%5g',
+                    ),
+            tu.Item('ss_right_value',
+                    label='Right',
+                    style='readonly',
+                    format_str='%5g',
+                    ),
+            tu.Item('red_chisq',
+                    label='Reduced chisq',
+                    show_label=True,
+                    style='readonly',
+                    format_str='%5g',
+                    ),
             'background_type',
             'fast',
             'zero_fill',
