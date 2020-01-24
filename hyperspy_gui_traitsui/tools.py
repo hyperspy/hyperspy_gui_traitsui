@@ -438,7 +438,7 @@ class FindPeaks2DHandler(tu.Handler):
     def close(self, info, is_ok=False):
         obj = info.obj
         obj.signal._plot.close()
-        info.obj.close(info, True)
+        obj.close()
         return True
 
     def compute_navigation(self, info):
@@ -447,6 +447,9 @@ class FindPeaks2DHandler(tu.Handler):
         """
         obj = info.obj
         obj.compute_navigation()
+        obj.signal._plot.close()
+        obj.close()
+        self.close(info, is_ok=True)
         return
 
 
