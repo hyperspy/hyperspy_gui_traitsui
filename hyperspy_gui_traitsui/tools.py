@@ -488,7 +488,7 @@ def find_peaks2D_traitsui(obj, **kwargs):
                 show_border=True),
             tu.Group(
                 tu.Item('obj.max_alpha', label='Alpha'),
-                tu.Item('obj.max_size', label='Size'),
+                tu.Item('obj.max_distance', label='Distance'),
                 visible_when='obj.method == "Max"',
                 label='Method parameters',
                 show_border=True),
@@ -534,7 +534,7 @@ def find_peaks2D_traitsui(obj, **kwargs):
             tu.Group(
                 tu.Item('obj.xc_distance', label='Distance'),
                 tu.Item('obj.xc_threshold', label='Threshold'),
-                visible_when="obj.method == 'Cross correlation'",
+                visible_when="obj.method == 'Template matching'",
                 label='Method parameters',
                 show_border=True),
             show_border=True),
