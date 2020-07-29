@@ -338,7 +338,7 @@ def remove_background_traitsui(obj, **kwargs):
                     tooltip="Right value of the selected range.",
                     ),
             tu.Item('red_chisq',
-                    label='χ²',
+                    label='red-χ²',
                     show_label=True,
                     style='readonly',
                     format_str='%5g',
