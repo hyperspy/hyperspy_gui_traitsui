@@ -1,9 +1,10 @@
 from traitsui.menu import (OKButton, CancelButton, OKCancelButtons)
 import traitsui.api as tu
+from traitsui.qt4.extra.bounds_editor import BoundsEditor
 
 from hyperspy_gui_traitsui.buttons import *
 from hyperspy_gui_traitsui.utils import add_display_arg
-from traitsui.qt4.extra.bounds_editor import BoundsEditor
+from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
 
 
 class SmoothingHandler(tu.Handler):
@@ -103,7 +104,7 @@ class ImageContrastHandler(tu.Handler):
         if obj.is_ok is False:
             obj.image.update()
         obj.close()
-        return True 
+        return True
 
     def apply(self, info):
         """Handles the **Apply** button being clicked.
@@ -471,7 +472,7 @@ def spikes_removal_traitsui(obj, **kwargs):
             'default_spike_width',
             tu.Group(
                 'spline_order',
-                enabled_when='interpolator_kind == \'Spline\''),
+                enabled_when='interpolator_kind == "Spline"'),
             show_border=True,
             label='Advanced settings'),
     ),
@@ -484,3 +485,117 @@ def spikes_removal_traitsui(obj, **kwargs):
         resizable=False,
     )
     return obj, {"view": view}
+
+
+class FindPeaks2DHandler(tu.Handler):
+
+    def close(self, info, is_ok=False):
+        obj = info.obj
+        obj.signal._plot.close()
+        obj.close()
+        return True
+
+    def compute_navigation(self, info):
+        """Handles the **Compute** button being clicked.
+
+        """
+        obj = info.obj
+        obj.compute_navigation()
+        obj.signal._plot.close()
+        obj.close()
+        info.ui.dispose()
+        return
+
+
+@add_display_arg
+def find_peaks2D_traitsui(obj, **kwargs):
+    ComputeButton = tu.Action(name="Compute over navigation axes",
+                              action="compute_navigation",
+                              tooltip="Find the peaks by iterating over \n"
+                                "the navigation axes.")
+
+    axis_group, context = get_navigation_sliders_group(
+            obj.signal.axes_manager.navigation_axes)
+
+    view = tu.View(
+        tu.Group(
+            tu.Group(axis_group,
+                    tu.Item('obj.random_navigation_position',
+                            show_label=False,
+                            name='Set navigation index randomly',
+                            tooltip='Set the navigation index to a random \n'
+                              'value.',),
+                    visible_when='show_navigation_sliders==True',
+                    label='Navigator',
+                    show_border=True),
+            tu.Item('obj.method',
+                    show_label=True),
+            tu.Group(
+                tu.Item('obj.local_max_distance', label='Distance'),
+                tu.Item('obj.local_max_threshold', label='Threshold'),
+                visible_when='obj.method == "Local max"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.max_alpha', label='Alpha'),
+                tu.Item('obj.max_distance', label='Distance'),
+                visible_when='obj.method == "Max"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.minmax_distance', label='Distance'),
+                tu.Item('obj.minmax_threshold', label='Threshold'),
+                visible_when='obj.method == "Minmax"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.zaefferer_grad_threshold', label='Grad threshold'),
+                tu.Item('obj.zaefferer_window_size', label='Window size'),
+                tu.Item('obj.zaefferer_distance_cutoff', label='Distance cutoff'),
+                visible_when='obj.method == "Zaefferer"',
+                label='Method parameters',
+               show_border=True),
+            tu.Group(
+                tu.Item('obj.stat_alpha', label='Alpha'),
+                tu.Item('obj.stat_window_radius', label='Window radius'),
+                tu.Item('obj.stat_convergence_ratio', label='Convergence ratio'),
+                visible_when='obj.method == "Stat"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.log_min_sigma', label='Min sigma'),
+                tu.Item('obj.log_max_sigma', label='Max sigma'),
+                tu.Item('obj.log_num_sigma', label='Num sigma'),
+                tu.Item('obj.log_threshold', label='Threshold'),
+                tu.Item('obj.log_overlap', label='Overlap'),
+                tu.Item('obj.log_log_scale', label='Log scale'),
+                visible_when="obj.method == 'Laplacian of Gaussian'",
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.dog_min_sigma', label='Min sigma'),
+                tu.Item('obj.dog_max_sigma', label='Max sigma'),
+                tu.Item('obj.dog_sigma_ratio', label='Sigma ratio'),
+                tu.Item('obj.dog_threshold', label='Threshold'),
+                tu.Item('obj.dog_overlap', label='Overlap'),
+                visible_when="obj.method == 'Difference of Gaussian'",
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.xc_distance', label='Distance'),
+                tu.Item('obj.xc_threshold', label='Threshold'),
+                visible_when="obj.method == 'Template matching'",
+                label='Method parameters',
+                show_border=True),
+            show_border=True),
+        buttons=[ComputeButton,
+                 CancelButton],
+        handler=FindPeaks2DHandler,
+        title='Find Peaks 2D',
+        resizable=True,
+        width=500,
+    )
+
+    context.update({"obj":obj})
+
+    return obj, {"view": view, "context": context}
