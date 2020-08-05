@@ -11,19 +11,20 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except (ImportError, OSError):
-    # pypandoc.convert raise OSError if pandoc is not in the path
-    with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-        long_description = f.read()
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 
 version = {}
 with open(path.join(here, "hyperspy_gui_traitsui", "version.py")) as fp:
     exec(fp.read(), version)
 
+PROJECT_URLS = {
+    'Bug Tracker': 'https://github.com/hyperspy/hyperspy_gui_traitsui/issues',
+    'Documentation': 'https://hyperspy.org/hyperspy-doc/current/index.html',
+    'Source Code': 'https://github.com/hyperspy_gui_traitsui/hyperspy',
+    'Support' : 'https://gitter.im/hyperspy/hyperspy'
+}
 
 setup(
     name='hyperspy_gui_traitsui',
@@ -35,13 +36,14 @@ setup(
 
     description=('traitsui GUI elements for HyperSpy.'),
     long_description=long_description,
+    long_description_content_type="text/markdown",
 
     # The project's main homepage.
     url='https://github.com/hyperspy/hyperspy_gui_traitsui',
+    project_urls=PROJECT_URLS,
 
     # Author details
     author='The HyperSpy Developers',
-    author_email='devel@hyperspy.org',
 
     # Choose your license
     license='GPLv3',
@@ -51,6 +53,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Science/Research",
@@ -76,7 +79,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['hyperspy>=1.5', 'traitsui>=6.0'],
+    install_requires=['hyperspy>=1.6', 'traitsui>=6.0'],
     entry_points={'hyperspy.extensions': 'hyperspy-gui-traitsui = hyperspy_gui_traitsui'},
     package_data={  # Optional
         'hyperspy_gui_traitsui': ['hyperspy_extension.yaml'], },

@@ -3,6 +3,7 @@ python:
     - "nightly"
     - 3.6
     - 3.7
+    - 3.8
 sudo: false
 install:
     - pip install --upgrade pip
