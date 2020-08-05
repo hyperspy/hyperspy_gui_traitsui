@@ -21,9 +21,12 @@ class SpanSelectorInSignal1DHandler(tu.Handler):
 
     def close(self, info, is_ok):
         # Removes the span selector from the plot
-        info.object.span_selector_switch(False)
+        obj = info.object
+        obj.span_selector_switch(False)
         if is_ok is True:
             self.apply(info)
+        if hasattr(obj, 'close'):
+            obj.close()
 
         return True
 
@@ -96,10 +99,11 @@ class ImageContrastHandler(tu.Handler):
         #        info.object.span_selector_switch(False)
         #        if is_ok is True:
         #            self.apply(info)
-        if is_ok is False:
-            info.object.image.update()
-        info.object.close()
-        return True
+        obj = info.object
+        if obj.is_ok is False:
+            obj.image.update()
+        obj.close()
+        return True 
 
     def apply(self, info):
         """Handles the **Apply** button being clicked.
@@ -128,18 +132,29 @@ class ImageContrastHandler(tu.Handler):
         return
 
 
+def get_spanner_left_right_items():
+    """
+    Return the list of items for the left and right values of the spanner.
+    """
+    return [tu.Item('ss_left_value',
+                    label='Left',
+                    style='readonly',
+                    format_str='%5g',),
+            tu.Item('ss_right_value',
+                    label='Right',
+                    style='readonly',
+                    format_str='%5g',),
+            ]
+
+
 @add_display_arg
 def calibration_traitsui(obj, **kwargs):
+    spanner_items = get_spanner_left_right_items()
     view = tu.View(
         tu.Group(
             'left_value',
             'right_value',
-            tu.Item('ss_left_value',
-                    label='Left',
-                    style='readonly'),
-            tu.Item('ss_right_value',
-                    label='Right',
-                    style='readonly'),
+            *spanner_items,
             tu.Item(name='offset',
                     style='readonly'),
             tu.Item(name='scale',
@@ -154,9 +169,9 @@ def calibration_traitsui(obj, **kwargs):
 
 @add_display_arg
 def interactive_range_selector(obj, **kwargs):
+    spanner_items = get_spanner_left_right_items()
     view = tu.View(
-        tu.Item('ss_left_value', label='Left', style='readonly'),
-        tu.Item('ss_right_value', label='Right', style='readonly'),
+        *spanner_items,
         handler=Signal1DRangeSelectorHandler,
         buttons=[OKButton, OurApplyButton, CancelButton],)
     return obj, {"view": view}
@@ -322,14 +337,34 @@ def integrate_in_range_traitsui(obj, **kwargs):
 def remove_background_traitsui(obj, **kwargs):
     view = tu.View(
         tu.Group(
+            tu.Item('ss_left_value',
+                    label='Left',
+                    style='readonly',
+                    format_str='%5g',
+                    tooltip="Left value of the selected range.",
+                    ),
+            tu.Item('ss_right_value',
+                    label='Right',
+                    style='readonly',
+                    format_str='%5g',
+                    tooltip="Right value of the selected range.",
+                    ),
+            tu.Item('red_chisq',
+                    label='red-χ²',
+                    show_label=True,
+                    style='readonly',
+                    format_str='%5g',
+                    tooltip="Reduced chi-squared of the fit in the selected range.",
+                    ),
             'background_type',
             'fast',
             'zero_fill',
             tu.Group(
                 'polynomial_order',
-                visible_when='background_type == "Polynomial"'), ),
+                visible_when="background_type == 'Polynomial'"), ),
         buttons=[OKButton, CancelButton],
         handler=SpanSelectorInSignal1DHandler,
+        close_result=False, # is_ok=False when using window close butto.
         title='Background removal tool',
         resizable=True,
         width=300,
