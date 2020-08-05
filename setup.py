@@ -36,6 +36,7 @@ setup(
 
     description=('traitsui GUI elements for HyperSpy.'),
     long_description=long_description,
+    long_description_content_type="text/markdown",
 
     # The project's main homepage.
     url='https://github.com/hyperspy/hyperspy_gui_traitsui',
