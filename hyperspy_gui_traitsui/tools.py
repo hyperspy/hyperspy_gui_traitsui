@@ -3,6 +3,7 @@ import traitsui.api as tu
 
 from hyperspy_gui_traitsui.buttons import *
 from hyperspy_gui_traitsui.utils import add_display_arg
+from traitsui.qt4.extra.bounds_editor import BoundsEditor
 
 
 class SmoothingHandler(tu.Handler):
@@ -269,23 +270,11 @@ def image_constast_editor_traitsui(obj, **kwargs):
                     show_label=True,
                     ),
             tu.Item('vmin_percentile',
-                    label='vmin percentile',
-                    show_label=True,
-                    enabled_when='auto',
-                    editor=tu.RangeEditor(low=0.,
-                                          high=100.,
-                                          format='%.2f',
-                                          mode="slider"),
-                    ),
-            tu.Item('vmax_percentile',
-                    label='vmax percentile',
-                    show_label=True,
-                    enabled_when='auto',
-                    editor=tu.RangeEditor(low=0.,
-                                          high=100.,
-                                          format='%.2f',
-                                          mode="slider"),
-                    ),
+                    label='vmin/vmax percentile',
+                    editor=BoundsEditor(
+                        low_name='vmin_percentile',
+                        high_name='vmax_percentile',
+                        format='%.2f')),
             show_border=True,
             ),
         tu.Group(
