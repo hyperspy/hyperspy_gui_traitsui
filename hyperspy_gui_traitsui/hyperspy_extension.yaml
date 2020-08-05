@@ -49,6 +49,9 @@ GUI:
       hyperspy.Signal1D.spikes_removal_tool:
         module: hyperspy_gui_traitsui.tools
         function: spikes_removal_traitsui
+      hyperspy.Signal2D.find_peaks:
+        module: hyperspy_gui_traitsui.tools
+        function: find_peaks2D_traitsui
       hyperspy.Model1D.fit_component:
         module: hyperspy_gui_traitsui.model
         function: fit_component_traitsui
