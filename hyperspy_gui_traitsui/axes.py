@@ -68,7 +68,7 @@ def get_navigation_sliders_group(obj):
     context = {}
 
     def get_axis_label(axis):
-        return (axis.name if axis.name != t.Undefined 
+        return (axis.name if axis.name != t.Undefined
                 else f"Axis {axis.index_in_axes_manager}")
 
     for i, axis in enumerate(obj):
@@ -78,6 +78,7 @@ def get_navigation_sliders_group(obj):
                                                 low_name=f'axis{i}.low_value',
                                                 high_name=f'axis{i}.high_value',
                                                 label_width=28,
+                                                format='%i',
                                                 mode='auto')))
         context[f'axis{i}'] = axis
 

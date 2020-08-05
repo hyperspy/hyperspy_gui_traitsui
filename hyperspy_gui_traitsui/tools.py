@@ -103,7 +103,7 @@ class ImageContrastHandler(tu.Handler):
         if obj.is_ok is False:
             obj.image.update()
         obj.close()
-        return True 
+        return True
 
     def apply(self, info):
         """Handles the **Apply** button being clicked.
@@ -484,16 +484,12 @@ class FindPeaks2DHandler(tu.Handler):
         obj.compute_navigation()
         obj.signal._plot.close()
         obj.close()
-        self.close(info, is_ok=True)
+        info.ui.dispose()
         return
 
 
 @add_display_arg
-def find_peaks2D_traitsui(obj, **kwargs):   
-    thisCloseButton = tu.Action(name="Close",
-                             action="close",
-                             tooltip="Close the peaks finder tool.")
-
+def find_peaks2D_traitsui(obj, **kwargs):
     ComputeButton = tu.Action(name="Compute over navigation axes",
                               action="compute_navigation",
                               tooltip="Find the peaks by iterating over \n"
@@ -574,7 +570,7 @@ def find_peaks2D_traitsui(obj, **kwargs):
                 show_border=True),
             show_border=True),
         buttons=[ComputeButton,
-                 thisCloseButton],
+                 CancelButton],
         handler=FindPeaks2DHandler,
         title='Find Peaks 2D',
         resizable=True,
