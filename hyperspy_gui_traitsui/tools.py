@@ -131,18 +131,29 @@ class ImageContrastHandler(tu.Handler):
         return
 
 
+def get_spanner_left_right_items():
+    """
+    Return the list of items for the left and right values of the spanner.
+    """
+    return [tu.Item('ss_left_value',
+                    label='Left',
+                    style='readonly',
+                    format_str='%5g',),
+            tu.Item('ss_right_value',
+                    label='Right',
+                    style='readonly',
+                    format_str='%5g',),
+            ]
+
+
 @add_display_arg
 def calibration_traitsui(obj, **kwargs):
+    spanner_items = get_spanner_left_right_items()
     view = tu.View(
         tu.Group(
             'left_value',
             'right_value',
-            tu.Item('ss_left_value',
-                    label='Left',
-                    style='readonly'),
-            tu.Item('ss_right_value',
-                    label='Right',
-                    style='readonly'),
+            *spanner_items,
             tu.Item(name='offset',
                     style='readonly'),
             tu.Item(name='scale',
@@ -157,9 +168,9 @@ def calibration_traitsui(obj, **kwargs):
 
 @add_display_arg
 def interactive_range_selector(obj, **kwargs):
+    spanner_items = get_spanner_left_right_items()
     view = tu.View(
-        tu.Item('ss_left_value', label='Left', style='readonly'),
-        tu.Item('ss_right_value', label='Right', style='readonly'),
+        *spanner_items,
         handler=Signal1DRangeSelectorHandler,
         buttons=[OKButton, OurApplyButton, CancelButton],)
     return obj, {"view": view}
