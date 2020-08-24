@@ -1,6 +1,5 @@
 from traitsui.menu import (OKButton, CancelButton, OKCancelButtons)
 import traitsui.api as tu
-from traitsui.qt4.extra.bounds_editor import BoundsEditor
 
 from hyperspy_gui_traitsui.buttons import *
 from hyperspy_gui_traitsui.utils import add_display_arg
@@ -263,6 +262,7 @@ def load(obj, **kwargs):
 
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
+    from traitsui.qt4.extra.bounds_editor import BoundsEditor
 
     view = tu.View(
         tu.Group(
