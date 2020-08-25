@@ -1,0 +1,91 @@
+name: Release
+# This workflow builds the sdist and bdist "on tag".
+# If run from the hyperspy/hyperspy_gui_traitsui repository, the wheels will be uploaded to pypi ;
+# otherwise, the wheels will be available as a github artifact.
+# The version will be updated automatically with the tag
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs: 
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Get the version
+        id: get_version
+        run: |
+          echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+
+  build-n-publish:
+    name: Build and publish
+    needs: create_release
+    runs-on: ubuntu-latest
+    env:
+      version_file: hyperspy_gui_traitsui/version.py
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Update version from tag
+        run: |
+          echo "__version__ = '${{ needs.create_release.outputs.version }}'" > ${{ env.version_file }}
+          cat ${{ env.version_file }}
+
+      - name: Install pep517
+        run: |
+          python -m pip install pep517
+
+      - name: Build a binary wheel and a source tarball
+        run: |
+          python -m pep517.build --source --binary --out-dir dist/ .
+
+      - name: Display content dist folder
+        run: |
+          ls dist/
+
+      - name: Install and test distribution
+        env:
+          MPLBACKEND: agg
+        run: |
+          pip install pytest
+          pip install --find-links dist hyperspy_gui_traitsui
+          pytest --pyargs hyperspy_gui_traitsui
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ./dist/*
+
+      - name: Publish distribution 📦 to PyPI
+        if: github.repository_owner == 'hyperspy'
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+           # Github secret set in the hyperspy/hyperspy repository
+           # not available from fork
+           password: ${{ secrets.pypi_password }}
+
