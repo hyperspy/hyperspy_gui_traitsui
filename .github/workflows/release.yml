@@ -3,6 +3,7 @@ name: Release
 # If run from the hyperspy/hyperspy_gui_traitsui repository, the wheels will be uploaded to pypi ;
 # otherwise, the wheels will be available as a github artifact.
 # The version will be updated automatically with the tag
+# Implemented in https://github.com/hyperspy/hyperspy_gui_traitsui/pull/31
 
 on:
   push:
@@ -85,7 +86,7 @@ jobs:
         if: github.repository_owner == 'hyperspy'
         uses: pypa/gh-action-pypi-publish@master
         with:
-           # Github secret set in the hyperspy/hyperspy repository
+           # Github secret set in the hyperspy/hyperspy_gui_traitsui repository
            # not available from fork
            password: ${{ secrets.pypi_password }}
 
