@@ -15,7 +15,7 @@ jobs:
   create_release:
     name: Create Release
     runs-on: ubuntu-latest
-    outputs: 
+    outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       version: ${{ steps.get_version.outputs.version }}
     steps:
@@ -44,8 +44,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       version_file: hyperspy_gui_traitsui/version.py
+      version: ${{ needs.create_release.outputs.version }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -54,7 +57,8 @@ jobs:
 
       - name: Update version from tag
         run: |
-          echo "__version__ = '${{ needs.create_release.outputs.version }}'" > ${{ env.version_file }}
+          # export version=${{ needs.create_release.outputs.version }}
+          python release_tools.py -f ${{ env.version_file }} --set_release_version --tag ${{ env.version }}
           cat ${{ env.version_file }}
 
       - name: Install pep517
@@ -90,3 +94,22 @@ jobs:
            # not available from fork
            password: ${{ secrets.pypi_password }}
 
+      - name: Checkout for post release changes
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Post release (set version to dev)
+        run: |
+          # Set the development version
+          # export version=${{ needs.create_release.outputs.version }}
+          python release_tools.py -f ${{ env.version_file }} --set_dev_version --tag ${{ env.version }}
+          cat ${{ env.version_file }}
+
+      - name: Commit and push to repository
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add ${{ env.version_file }}
+          git commit -m "Set version to dev."
+          git push --set-upstream origin
