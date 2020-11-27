@@ -1,7 +1,6 @@
 import traitsui.api as tu
 
-from hyperspy_gui_traitsui.utils import (
-    register_traitsui_widget, add_display_arg)
+from hyperspy_gui_traitsui.utils import add_display_arg
 from hyperspy_gui_traitsui.buttons import OurFitButton, OurCloseButton
 from hyperspy_gui_traitsui.tools import SpanSelectorInSignal1DHandler
 
@@ -17,9 +16,8 @@ class ComponentFitHandler(SpanSelectorInSignal1DHandler):
         return
 
 
-@register_traitsui_widget(toolkey="Model1D.fit_component")
 @add_display_arg
-def fit_component_tratisui(obj, **kwargs):
+def fit_component_traitsui(obj, **kwargs):
     fit_component_view = tu.View(
         tu.Item('only_current', show_label=True,),
         buttons=[OurFitButton, OurCloseButton],
