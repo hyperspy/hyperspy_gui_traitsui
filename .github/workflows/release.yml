@@ -89,6 +89,6 @@ jobs:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          twine upload sdist/*.whl --verbose 
-          twine upload sdist/*.tar.gz --verbose 
+          twine upload dist/*.whl --verbose 
+          twine upload dist/*.tar.gz --verbose 
 
