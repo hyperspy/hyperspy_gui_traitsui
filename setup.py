@@ -80,6 +80,9 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=['hyperspy>=1.6', 'traitsui>=6.0'],
+    extras_require={
+        'tests': ['pytest'],
+        'coverage':["pytest-cov", "codecov"]},
     entry_points={'hyperspy.extensions': 'hyperspy-gui-traitsui = hyperspy_gui_traitsui'},
     package_data={  # Optional
         'hyperspy_gui_traitsui': ['hyperspy_extension.yaml'], },
