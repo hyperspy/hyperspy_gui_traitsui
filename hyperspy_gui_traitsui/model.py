@@ -17,7 +17,7 @@ class ComponentFitHandler(SpanSelectorInSignal1DHandler):
 
 
 @add_display_arg
-def fit_component_tratisui(obj, **kwargs):
+def fit_component_traitsui(obj, **kwargs):
     fit_component_view = tu.View(
         tu.Item('only_current', show_label=True,),
         buttons=[OurFitButton, OurCloseButton],

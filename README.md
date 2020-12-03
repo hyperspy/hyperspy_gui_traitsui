@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui.svg?branch=master)](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui)
-![PyPI](https://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg)
+![Tests](https://github.com/hyperspy/hyperspy_gui_traitsui/workflows/Tests/badge.svg)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hyperspy_gui_traitsui.svg)
-
+![PyPI](https://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg)
+[![Anaconda Cloud](https://anaconda.org/conda-forge/hyperspy-gui-traitsui/badges/version.svg)](https://anaconda.org/conda-forge/hyperspy-gui-traitsui)
 
 **hyperspy_gui_traitsui** provides traitsui graphic user interface (GUI) elements for hyperspy.
 

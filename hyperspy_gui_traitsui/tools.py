@@ -3,6 +3,7 @@ import traitsui.api as tu
 
 from hyperspy_gui_traitsui.buttons import *
 from hyperspy_gui_traitsui.utils import add_display_arg
+from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
 
 
 class SmoothingHandler(tu.Handler):
@@ -20,9 +21,12 @@ class SpanSelectorInSignal1DHandler(tu.Handler):
 
     def close(self, info, is_ok):
         # Removes the span selector from the plot
-        info.object.span_selector_switch(False)
+        obj = info.object
+        obj.span_selector_switch(False)
         if is_ok is True:
             self.apply(info)
+        if hasattr(obj, 'close'):
+            obj.close()
 
         return True
 
@@ -95,9 +99,10 @@ class ImageContrastHandler(tu.Handler):
         #        info.object.span_selector_switch(False)
         #        if is_ok is True:
         #            self.apply(info)
-        if is_ok is False:
-            info.object.image.update()
-        info.object.close()
+        obj = info.object
+        if obj.is_ok is False:
+            obj.image.update()
+        obj.close()
         return True
 
     def apply(self, info):
@@ -127,18 +132,29 @@ class ImageContrastHandler(tu.Handler):
         return
 
 
+def get_spanner_left_right_items():
+    """
+    Return the list of items for the left and right values of the spanner.
+    """
+    return [tu.Item('ss_left_value',
+                    label='Left',
+                    style='readonly',
+                    format_str='%5g',),
+            tu.Item('ss_right_value',
+                    label='Right',
+                    style='readonly',
+                    format_str='%5g',),
+            ]
+
+
 @add_display_arg
 def calibration_traitsui(obj, **kwargs):
+    spanner_items = get_spanner_left_right_items()
     view = tu.View(
         tu.Group(
             'left_value',
             'right_value',
-            tu.Item('ss_left_value',
-                    label='Left',
-                    style='readonly'),
-            tu.Item('ss_right_value',
-                    label='Right',
-                    style='readonly'),
+            *spanner_items,
             tu.Item(name='offset',
                     style='readonly'),
             tu.Item(name='scale',
@@ -153,9 +169,9 @@ def calibration_traitsui(obj, **kwargs):
 
 @add_display_arg
 def interactive_range_selector(obj, **kwargs):
+    spanner_items = get_spanner_left_right_items()
     view = tu.View(
-        tu.Item('ss_left_value', label='Left', style='readonly'),
-        tu.Item('ss_right_value', label='Right', style='readonly'),
+        *spanner_items,
         handler=Signal1DRangeSelectorHandler,
         buttons=[OKButton, OurApplyButton, CancelButton],)
     return obj, {"view": view}
@@ -246,53 +262,72 @@ def load(obj, **kwargs):
 
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
+    from traitsui.qt4.extra.bounds_editor import BoundsEditor
 
     view = tu.View(
         tu.Group(
             tu.Item('ss_left_value',
                     label='Min',
                     show_label=True,
-                    style='readonly',),
+                    style='readonly',
+                    format_str='%5g',
+                    ),
             tu.Item('ss_right_value',
                     label='Max',
                     show_label=True,
-                    style='readonly'),
+                    style='readonly',
+                    format_str='%5g',
+                    ),
             show_border=True
+            ),
+        tu.Group(
+            tu.Item('auto',
+                    label='Auto',
+                    show_label=True,
+                    ),
+            tu.Item('vmin_percentile',
+                    label='vmin/vmax percentile',
+                    editor=BoundsEditor(
+                        low_name='vmin_percentile',
+                        high_name='vmax_percentile',
+                        format='%.2f')),
+            show_border=True,
             ),
         tu.Group(
             tu.Item('bins',
                     label='Bins',
-                    show_label=True),
+                    show_label=True,
+                    ),
             tu.Item('norm',
                     label='Norm',
-                    show_label=True),
-            tu.Item('saturated_pixels',
-                    label='Saturated pixels',
                     show_label=True,
-                    # Not working because it set the bounds value to 0-1
-                    # editor=tu.RangeEditor(format='%.2f',
-                    #                       label_width=28)
                     ),
-            tu.Item('auto',
-                    label='Auto',
-                    show_label=True),
-            show_border=True,
-            ),
-        tu.Group(
             tu.Item('gamma',
                     label='Gamma',
                     show_label=True,
                     visible_when='norm == "Power"',
+                    editor=tu.RangeEditor(low=0.1,
+                                          high=3.,
+                                          format='%.3f',
+                                          mode="slider"),
                     ),
             tu.Item('linthresh',
                     label='Linear threshold',
                     show_label=True,
                     visible_when='norm == "Symlog"',
+                    editor=tu.RangeEditor(low=0.01,
+                                          high=1.,
+                                          format='%.3f',
+                                          mode="slider"),
                     ),
             tu.Item('linscale',
                     label='Linear scale',
                     show_label=True,
                     visible_when='norm == "Symlog"',
+                    editor=tu.RangeEditor(low=0.,
+                                          high=10.,
+                                          format='%.3f',
+                                          mode="slider"),
                     ),
             show_border=True,
             ),
@@ -321,14 +356,34 @@ def integrate_in_range_traitsui(obj, **kwargs):
 def remove_background_traitsui(obj, **kwargs):
     view = tu.View(
         tu.Group(
+            tu.Item('ss_left_value',
+                    label='Left',
+                    style='readonly',
+                    format_str='%5g',
+                    tooltip="Left value of the selected range.",
+                    ),
+            tu.Item('ss_right_value',
+                    label='Right',
+                    style='readonly',
+                    format_str='%5g',
+                    tooltip="Right value of the selected range.",
+                    ),
+            tu.Item('red_chisq',
+                    label='red-χ²',
+                    show_label=True,
+                    style='readonly',
+                    format_str='%5g',
+                    tooltip="Reduced chi-squared of the fit in the selected range.",
+                    ),
             'background_type',
             'fast',
             'zero_fill',
             tu.Group(
                 'polynomial_order',
-                visible_when='background_type == \'Polynomial\''), ),
+                visible_when="background_type == 'Polynomial'"), ),
         buttons=[OKButton, CancelButton],
         handler=SpanSelectorInSignal1DHandler,
+        close_result=False, # is_ok=False when using window close butto.
         title='Background removal tool',
         resizable=True,
         width=300,
@@ -417,7 +472,7 @@ def spikes_removal_traitsui(obj, **kwargs):
             'default_spike_width',
             tu.Group(
                 'spline_order',
-                enabled_when='interpolator_kind == \'Spline\''),
+                enabled_when='interpolator_kind == "Spline"'),
             show_border=True,
             label='Advanced settings'),
     ),
@@ -430,3 +485,117 @@ def spikes_removal_traitsui(obj, **kwargs):
         resizable=False,
     )
     return obj, {"view": view}
+
+
+class FindPeaks2DHandler(tu.Handler):
+
+    def close(self, info, is_ok=False):
+        obj = info.obj
+        obj.signal._plot.close()
+        obj.close()
+        return True
+
+    def compute_navigation(self, info):
+        """Handles the **Compute** button being clicked.
+
+        """
+        obj = info.obj
+        obj.compute_navigation()
+        obj.signal._plot.close()
+        obj.close()
+        info.ui.dispose()
+        return
+
+
+@add_display_arg
+def find_peaks2D_traitsui(obj, **kwargs):
+    ComputeButton = tu.Action(name="Compute over navigation axes",
+                              action="compute_navigation",
+                              tooltip="Find the peaks by iterating over \n"
+                                "the navigation axes.")
+
+    axis_group, context = get_navigation_sliders_group(
+            obj.signal.axes_manager.navigation_axes)
+
+    view = tu.View(
+        tu.Group(
+            tu.Group(axis_group,
+                    tu.Item('obj.random_navigation_position',
+                            show_label=False,
+                            name='Set navigation index randomly',
+                            tooltip='Set the navigation index to a random \n'
+                              'value.',),
+                    visible_when='show_navigation_sliders==True',
+                    label='Navigator',
+                    show_border=True),
+            tu.Item('obj.method',
+                    show_label=True),
+            tu.Group(
+                tu.Item('obj.local_max_distance', label='Distance'),
+                tu.Item('obj.local_max_threshold', label='Threshold'),
+                visible_when='obj.method == "Local max"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.max_alpha', label='Alpha'),
+                tu.Item('obj.max_distance', label='Distance'),
+                visible_when='obj.method == "Max"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.minmax_distance', label='Distance'),
+                tu.Item('obj.minmax_threshold', label='Threshold'),
+                visible_when='obj.method == "Minmax"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.zaefferer_grad_threshold', label='Grad threshold'),
+                tu.Item('obj.zaefferer_window_size', label='Window size'),
+                tu.Item('obj.zaefferer_distance_cutoff', label='Distance cutoff'),
+                visible_when='obj.method == "Zaefferer"',
+                label='Method parameters',
+               show_border=True),
+            tu.Group(
+                tu.Item('obj.stat_alpha', label='Alpha'),
+                tu.Item('obj.stat_window_radius', label='Window radius'),
+                tu.Item('obj.stat_convergence_ratio', label='Convergence ratio'),
+                visible_when='obj.method == "Stat"',
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.log_min_sigma', label='Min sigma'),
+                tu.Item('obj.log_max_sigma', label='Max sigma'),
+                tu.Item('obj.log_num_sigma', label='Num sigma'),
+                tu.Item('obj.log_threshold', label='Threshold'),
+                tu.Item('obj.log_overlap', label='Overlap'),
+                tu.Item('obj.log_log_scale', label='Log scale'),
+                visible_when="obj.method == 'Laplacian of Gaussian'",
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.dog_min_sigma', label='Min sigma'),
+                tu.Item('obj.dog_max_sigma', label='Max sigma'),
+                tu.Item('obj.dog_sigma_ratio', label='Sigma ratio'),
+                tu.Item('obj.dog_threshold', label='Threshold'),
+                tu.Item('obj.dog_overlap', label='Overlap'),
+                visible_when="obj.method == 'Difference of Gaussian'",
+                label='Method parameters',
+                show_border=True),
+            tu.Group(
+                tu.Item('obj.xc_distance', label='Distance'),
+                tu.Item('obj.xc_threshold', label='Threshold'),
+                visible_when="obj.method == 'Template matching'",
+                label='Method parameters',
+                show_border=True),
+            show_border=True),
+        buttons=[ComputeButton,
+                 CancelButton],
+        handler=FindPeaks2DHandler,
+        title='Find Peaks 2D',
+        resizable=True,
+        width=500,
+    )
+
+    context.update({"obj":obj})
+
+    return obj, {"view": view, "context": context}
