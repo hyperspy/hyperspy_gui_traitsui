@@ -202,11 +202,8 @@ def axes_gui(obj, **kwargs):
         kwargs = {}
         if hasattr(axis,'parameters_list'):
             kwargs["parameters_list"] = axis.parameters_list
-            for i in axis.parameters_list:
-                kwargs[i] = getattr(axis,i)
             if hasattr(axis.x,'scale'):
                 kwargs["xscale"] = axis.x.scale
-                kwargs["xoffset"] = axis.x.offset
         ag.append(get_axis_group(
             n, label=get_axis_label(axis), navigate=axis.navigate,
             attribs=axis.__dict__.keys(),**kwargs))
