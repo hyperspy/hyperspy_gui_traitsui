@@ -9,9 +9,9 @@ jobs:
     timeout-minutes: 30
     env:
       MPLBACKEND: agg
-      PIP_ARGS: --upgrade --use-feature=2020-resolver -e
+      PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs hyperspy_gui_traitsui
-      PYTEST_ARGS_COVERAGE: 
+      PYTEST_ARGS_COVERAGE:
     strategy:
       fail-fast: false
       matrix:
@@ -39,12 +39,24 @@ jobs:
         shell: bash
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+
+      - name: Install HyperSpy (RELEASE_next_minor)
+        shell: bash
+        if: "!contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')"
+        run: |
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+
+      - name: Install HyperSpy (non_uniform_axis)
+        # Test against the hyperspy `non_uniform_axes` branch
+        if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
+        shell: bash
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
 
       - name: Run test suite
         run: |
           pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
 
       - name: Upload coverage to Codecov
-        if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
+        if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
         uses: codecov/codecov-action@v1

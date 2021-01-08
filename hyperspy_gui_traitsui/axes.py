@@ -2,7 +2,7 @@ import traits.api as t
 import traitsui.api as tui
 
 from hyperspy_gui_traitsui.utils import add_display_arg
-from hyperspy.misc.utils import isiterable, ordinal
+from hyperspy.misc.utils import ordinal
 
 
 def get_axis_label(axis):
@@ -87,7 +87,9 @@ def get_navigation_sliders_group(obj):
     return axis_group, context
 
 
-def get_data_axis_view(navigate, label):
+def _get_data_axis_view(obj):
+    label = get_axis_label(obj)
+
     group_args = [
         tui.Item(name='name'),
         tui.Item(name='size', style='readonly'),
@@ -95,17 +97,19 @@ def get_data_axis_view(navigate, label):
         tui.Item(name='units'),
     ]
     cal_args = [ ]
-    if navigate:
+
+    if obj.navigate:
         group_args.extend([
             tui.Item(name='index'),
             tui.Item(name='value', style='readonly'), ])
-    if 'scale' in attribs:
+    if getattr(obj, 'scale'):
         cal_args.extend([
             tui.Item(name='scale'),
             tui.Item(name='offset'), ])
-    if '_expression' in attribs:
+    if getattr(obj, '_expression'):
         cal_args.extend([
             tui.Item(name='_expression', style='readonly'), ])
+
     data_axis_view = tui.View(
         tui.Group(
             tui.Group(*group_args,
@@ -115,14 +119,13 @@ def get_data_axis_view(navigate, label):
             # label="Data Axis properties",
             show_border=True,),
         title=label,)
+
     return data_axis_view
 
 
 @add_display_arg
 def data_axis_traitsui(obj, **kwargs):
-    return obj, {"view": get_data_axis_view(
-        navigate=obj.navigate,
-        label=get_axis_label(obj), attribs=obj.__dict__.keys())}
+    return obj, {"view": _get_data_axis_view(obj)}
 
 
 def get_axis_group(n, navigate, label='', attribs = []):
@@ -165,7 +168,7 @@ def axes_gui(obj, **kwargs):
     ag = []
     for n, axis in enumerate(obj._get_axes_in_natural_order()):
         ag.append(get_axis_group(
-            n, label=get_axis_label(axis), navigate=axis.navigate, 
+            n, label=get_axis_label(axis), navigate=axis.navigate,
             attribs=axis.__dict__.keys()))
         context['axis%i' % n] = axis
     ag = tuple(ag)
