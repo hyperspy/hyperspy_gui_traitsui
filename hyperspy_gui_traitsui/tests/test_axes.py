@@ -36,18 +36,20 @@ def test_non_uniform_axes():
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
-        pytest.skip("HyperSpy version doesn't non-uniform axis")
+        pytest.skip("HyperSpy version doesn't support non-uniform axis")
 
     dict0 = {'scale': 1.0, 'size':2}
-    dict1 = {'expression': 'a / (x+1)', 'a': 1240, 'size': 3,
+    dict1 = {'expression': 'a / (x+b)', 'a': 1240, 'b': 1, 'size': 3,
              'name': 'plumage', 'units': 'beautiful', 'navigate': False}
     dict2 = {'axis': np.arange(4), 'name': 'norwegianblue', 'units': 'ex',
              'navigate': False, }
-    s = hs.signals.Signal2D(np.empty((2, 3, 4)), axes=[dict0, dict1, dict2])
+    dict3 = {'expression': 'a / (x+b)', 'a': 1240, 'b': 1, 'x': dict2,
+             'name': 'pushing up', 'units': 'the daisies', 'navigate': False}
+    s = hs.signals.Signal2D(np.empty((2, 3, 4, 4)), axes=[dict0, dict1, dict2, dict3])
 
     s.axes_manager.gui(**KWARGS)
 
-    s2 = hs.signals.Signal1D(np.empty((4, 3, 2)), axes=[dict1, dict2, dict0])
+    s2 = hs.signals.Signal1D(np.empty((3, 4, 4, 2)), axes=[dict1, dict2, dict3, dict0])
     s2.axes_manager.gui_navigation_sliders(**KWARGS)
     s2.axes_manager.gui(**KWARGS)
 
