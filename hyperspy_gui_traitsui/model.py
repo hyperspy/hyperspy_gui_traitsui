@@ -20,6 +20,7 @@ class ComponentFitHandler(SpanSelectorInSignal1DHandler):
 def fit_component_traitsui(obj, **kwargs):
     fit_component_view = tu.View(
         tu.Item('only_current', show_label=True,),
+        tu.Item('iterpath', show_label=True, enabled_when='only_current==False'),
         buttons=[OurFitButton, OurCloseButton],
         title='Fit single component',
         handler=ComponentFitHandler,
