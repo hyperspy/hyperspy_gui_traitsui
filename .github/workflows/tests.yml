@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      MPLBACKEND: agg
+      ETS_TOOLKIT: qt
       PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs hyperspy_gui_traitsui
       PYTEST_ARGS_COVERAGE:
@@ -26,9 +26,10 @@ jobs:
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests]'
             LABEL: -RnP
-          - PYTHON_VERSION: 3.8
-            PIP_SELECTOR: '[tests]'
-            LABEL: -Release
+          # Currently failing, re-enable when hyperspy released.
+          #- PYTHON_VERSION: 3.8
+          #  PIP_SELECTOR: '[tests]'
+          #  LABEL: -Release
 
     steps:
       - uses: actions/checkout@v2
@@ -62,15 +63,23 @@ jobs:
         run: |
           pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
 
+      - name: Install Dependencies
+        run: |
+          pip install pyqt5
+          sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
       - name: Install
         shell: bash
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
 
       - name: Run test suite
-        run: |
-          pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
+        # run the tests headlessly
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
 
       - name: Upload coverage to Codecov
         if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
         uses: codecov/codecov-action@v1
+
