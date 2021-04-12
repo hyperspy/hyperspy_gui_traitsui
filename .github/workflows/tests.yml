@@ -12,12 +12,12 @@ jobs:
       PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs hyperspy_gui_traitsui
       PYTEST_ARGS_COVERAGE:
-      LABEL: -RnM
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: [3.6, 3.7]
+        PYTHON_VERSION: [3.6, 3.7, 3.9]
         PIP_SELECTOR: ['[tests]']
+        LABEL: [-RnM]
         include:
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests, coverage]'
@@ -26,6 +26,9 @@ jobs:
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests]'
             LABEL: -RnP
+          - PYTHON_VERSION: 3.8
+            PIP_SELECTOR: '[tests]'
+            LABEL: -Release
 
     steps:
       - uses: actions/checkout@v2
