@@ -12,6 +12,7 @@ jobs:
       PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs hyperspy_gui_traitsui
       PYTEST_ARGS_COVERAGE:
+      LABEL: -RnM
     strategy:
       fail-fast: false
       matrix:
@@ -21,7 +22,11 @@ jobs:
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests, coverage]'
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-            LABEL: /coverage
+            LABEL: -non_uniform-coverage
+          - PYTHON_VERSION: 3.8
+            PIP_SELECTOR: '[tests]'
+            LABEL: -RnP
+
     steps:
       - uses: actions/checkout@v2
 
@@ -35,23 +40,29 @@ jobs:
           python --version
           pip --version
 
+      - name: Install HyperSpy (RELEASE_next_minor)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnM')
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+
+      - name: Install HyperSpy (RELEASE_next_patch)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnP')
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_patch.zip
+
+      - name: Install HyperSpy (non_uniform_axis)
+        # Test against the hyperspy `non_uniform_axes` branch
+        if: contains( matrix.LABEL, 'non_uniform')
+        shell: bash
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
+
       - name: Install
         shell: bash
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
-
-      - name: Install HyperSpy (RELEASE_next_minor)
-        shell: bash
-        if: "!contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')"
-        run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
-
-      - name: Install HyperSpy (non_uniform_axis)
-        # Test against the hyperspy `non_uniform_axes` branch
-        if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
-        shell: bash
-        run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
 
       - name: Run test suite
         run: |
