@@ -67,12 +67,22 @@ jobs:
         run: |
           ls dist/
 
-      - name: Install and test distribution
+      - name: Install Dependencies
+        run: |
+          pip install pyqt5
+          sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
+      - name: Install package
         env:
           MPLBACKEND: agg
         run: |
           pip install --find-links dist hyperspy_gui_traitsui[tests]
-          pytest --pyargs hyperspy_gui_traitsui
+
+      - name: Run test suite
+        # run the tests headlessly
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: pytest --pyargs hyperspy_gui_traitsui
 
       - uses: actions/upload-artifact@v2
         with:
