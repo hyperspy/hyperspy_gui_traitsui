@@ -95,13 +95,7 @@ class CalibrationHandler(SpanSelectorInSignal1DHandler):
 class ImageContrastHandler(tu.Handler):
 
     def close(self, info, is_ok):
-        # Removes the span selector from the plot
-        #        info.object.span_selector_switch(False)
-        #        if is_ok is True:
-        #            self.apply(info)
         obj = info.object
-        if obj.is_ok is False:
-            obj.image.update()
         obj.close()
         return True
 

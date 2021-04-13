@@ -8,20 +8,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      MPLBACKEND: agg
+      ETS_TOOLKIT: qt
       PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs hyperspy_gui_traitsui
       PYTEST_ARGS_COVERAGE:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: [3.6, 3.7]
+        PYTHON_VERSION: [3.6, 3.7, 3.9]
         PIP_SELECTOR: ['[tests]']
+        LABEL: [-RnM]
         include:
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests, coverage]'
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-            LABEL: /coverage
+            LABEL: -non_uniform-coverage
+          - PYTHON_VERSION: 3.8
+            PIP_SELECTOR: '[tests]'
+            LABEL: -RnP
+          # Currently failing, re-enable when hyperspy released.
+          #- PYTHON_VERSION: 3.8
+          #  PIP_SELECTOR: '[tests]'
+          #  LABEL: -Release
+
     steps:
       - uses: actions/checkout@v2
 
@@ -35,28 +44,42 @@ jobs:
           python --version
           pip --version
 
+      - name: Install HyperSpy (RELEASE_next_minor)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnM')
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+
+      - name: Install HyperSpy (RELEASE_next_patch)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnP')
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_patch.zip
+
+      - name: Install HyperSpy (non_uniform_axis)
+        # Test against the hyperspy `non_uniform_axes` branch
+        if: contains( matrix.LABEL, 'non_uniform')
+        shell: bash
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
+
+      - name: Install Dependencies
+        run: |
+          pip install pyqt5
+          sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
       - name: Install
         shell: bash
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
 
-      - name: Install HyperSpy (RELEASE_next_minor)
-        shell: bash
-        if: "!contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')"
-        run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
-
-      - name: Install HyperSpy (non_uniform_axis)
-        # Test against the hyperspy `non_uniform_axes` branch
-        if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
-        shell: bash
-        run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
-
       - name: Run test suite
-        run: |
-          pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
+        # run the tests headlessly
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
 
       - name: Upload coverage to Codecov
         if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
         uses: codecov/codecov-action@v1
+
