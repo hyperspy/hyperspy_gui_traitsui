@@ -54,6 +54,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Science/Research",
@@ -79,7 +80,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['hyperspy>=1.6', 'traitsui>=6.0'],
+    install_requires=['hyperspy>=1.6.2', 'traitsui>=6.0'],
     extras_require={
         'tests': ['pytest'],
         'coverage':["pytest-cov", "codecov"]},
