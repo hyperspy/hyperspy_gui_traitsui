@@ -67,10 +67,17 @@ jobs:
         run: |
           ls dist/
 
+      - uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ./dist/*.whl
+            ./dist/*.tar.gz
+
       - name: Install Dependencies
         run: |
           pip install pyqt5
           sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
 
       - name: Install package
         env:
@@ -83,12 +90,6 @@ jobs:
         uses: GabrielBB/xvfb-action@v1
         with:
           run: pytest --pyargs hyperspy_gui_traitsui
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: |
-            ./dist/*.whl
-            ./dist/*.tar.gz
 
       - name: Publish wheels to PyPI
         if: github.repository_owner == 'hyperspy'
