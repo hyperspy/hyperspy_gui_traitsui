@@ -1,9 +1,12 @@
-from traitsui.menu import (OKButton, CancelButton, OKCancelButtons)
 import traitsui.api as tu
+from traitsui.file_dialog import FileEditor
+from traitsui.menu import OKButton, CancelButton, OKCancelButtons
 
-from hyperspy_gui_traitsui.buttons import *
-from hyperspy_gui_traitsui.utils import add_display_arg
 from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
+from hyperspy_gui_traitsui.buttons import (
+    OurApplyButton,HelpButton, OurResetButton
+    )
+from hyperspy_gui_traitsui.utils import add_display_arg
 
 
 class SmoothingHandler(tu.Handler):
@@ -247,7 +250,8 @@ def smooth_butterworth(obj, **kwargs):
 @add_display_arg
 def load(obj, **kwargs):
     view = tu.View(
-        tu.Group('filename', "lazy"),
+        tu.Group(tu.Item('filename', editor=FileEditor(dialog_style='open')),
+                  "lazy"),
         kind='livemodal',
         buttons=[OKButton, CancelButton],
         title='Load file')
