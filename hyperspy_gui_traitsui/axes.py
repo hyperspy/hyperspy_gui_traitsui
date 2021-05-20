@@ -87,62 +87,21 @@ def get_navigation_sliders_group(obj):
     return axis_group, context
 
 
-def _get_data_axis_view(obj):
-    label = get_axis_label(obj)
-
-    group_args = [
-        tui.Item(name='name'),
-        tui.Item(name='size', style='readonly'),
-        tui.Item(name='index_in_array', style='readonly'),
-        tui.Item(name='units'),
-        tui.Item(name='is_binned'),
-    ]
-    cal_args = [ ]
-
-    if obj.navigate:
-        group_args.extend([
-            tui.Item(name='index'),
-            tui.Item(name='value', style='readonly'), ])
-    if hasattr(obj, 'scale'):
-        cal_args.extend([
-            tui.Item(name='scale'),
-            tui.Item(name='offset'), ])
-    if hasattr(obj, '_expression'):
-        cal_args.extend([
-            tui.Item(name='_expression', style='readonly'), ])
-        for parameter in obj.parameters_list:
-            cal_args.extend([
-                tui.Item(name=parameter, style='readonly'), ])
-        if hasattr(obj.x, 'scale'):
-            cal_args.extend([
-                tui.Item(name='x.scale'),
-                tui.Item(name='x.offset'), ])
-
-    if cal_args == [ ]:
-        data_axis_view = tui.View(
-            tui.Group(
-                tui.Group(*group_args,
-                          show_border=True,),
-                # label="Data Axis properties",
-                show_border=True,),
-            title=label,)
-    else:
-        data_axis_view = tui.View(
-            tui.Group(
-                tui.Group(*group_args,
-                          show_border=True,),
-                tui.Group(*cal_args,
-                          label='Calibration', show_border=True, ),
-                # label="Data Axis properties",
-                show_border=True,),
-            title=label,)
-
-    return data_axis_view
-
-
 @add_display_arg
 def axis_gui(obj, **kwargs):
-    return obj, {"view": _get_data_axis_view(obj)}
+    context = {'axis0': obj}
+    kwargs = {}
+    if hasattr(obj, 'parameters_list'):
+        kwargs["parameters_list"] = obj.parameters_list
+        if hasattr(obj.x, 'scale'):
+            kwargs["xscale"] = obj.x.scale
+    ag = get_axis_group(n=0,
+                        navigate=obj.navigate,
+                        attribs=obj.__dict__.keys(),
+                        **kwargs
+                        )
+    obj.trait_view("traits_view", tui.View(ag, title="Axis GUI"))
+    return obj, {"context": context}
 
 
 def get_axis_group(n, navigate, label='', attribs=[], **kwargs):
