@@ -110,10 +110,9 @@ def _get_data_axis_view(obj):
     if hasattr(obj, '_expression'):
         cal_args.extend([
             tui.Item(name='_expression', style='readonly'), ])
-            #tui.Item(name='_expression', style='readonly'), ]) # Add parameter of expression
-        for i in obj.parameters_list:
+        for parameter in obj.parameters_list:
             cal_args.extend([
-                tui.Item(name=obj.parameters_list[i], style='readonly'), ])
+                tui.Item(name=parameter, style='readonly'), ])
         if hasattr(obj.x, 'scale'):
             cal_args.extend([
                 tui.Item(name='x.scale'),
@@ -142,11 +141,11 @@ def _get_data_axis_view(obj):
 
 
 @add_display_arg
-def data_axis_traitsui(obj, **kwargs):
+def axis_gui(obj, **kwargs):
     return obj, {"view": _get_data_axis_view(obj)}
 
 
-def get_axis_group(n, navigate, label='', attribs = [], **kwargs):
+def get_axis_group(n, navigate, label='', attribs=[], **kwargs):
     group_args = [
         tui.Item(f'axis{n}.name'),
         tui.Item(f'axis{n}.size', style='readonly'),
@@ -162,22 +161,23 @@ def get_axis_group(n, navigate, label='', attribs = [], **kwargs):
     # where the limits are defined by another traits_view
     if navigate:
         group_args.extend([
-            tui.Item('axis%i.index' % n, style='readonly'),
-            tui.Item('axis%i.value' % n, style='readonly'), ])
+            tui.Item(f'axis{n}.index', style='readonly'),
+            tui.Item(f'axis{n}.value', style='readonly'), ])
     if 'scale' in attribs:
         cal_args.extend([
-            tui.Item('axis%i.scale' % n),
-            tui.Item('axis%i.offset' % n), ])
+            tui.Item(f'axis{n}.scale'),
+            tui.Item(f'axis{n}.offset'), ])
     if '_expression' in attribs:
         cal_args.extend([
-            tui.Item('axis%i._expression' % n, style='readonly'), ])
+            tui.Item(f'axis{n}._expression', style='readonly'), ])
         for j in range(len(kwargs['parameters_list'])):
+            p = kwargs['parameters_list'][j]
             cal_args.extend([
-                tui.Item('axis{n}.{p}'.format(n = n,p = kwargs['parameters_list'][j]), label = kwargs['parameters_list'][j]), ])
+                tui.Item(f'axis{n}.{p}', label=p), ])
         if 'xscale' in kwargs.keys():
             cal_args.extend([
-                tui.Item('axis%i.x.scale' % n, label='x scale'),
-                tui.Item('axis%i.x.offset' % n, label='x offset'), ])
+                tui.Item(f'axis{n}.x.scale', label='x scale'),
+                tui.Item(f'axis{n}.x.offset', label='x offset'), ])
 
     if cal_args == [ ]:
         group = tui.Group(
@@ -202,14 +202,14 @@ def axes_gui(obj, **kwargs):
     ag = []
     for n, axis in enumerate(obj._get_axes_in_natural_order()):
         kwargs = {}
-        if hasattr(axis,'parameters_list'):
+        if hasattr(axis, 'parameters_list'):
             kwargs["parameters_list"] = axis.parameters_list
-            if hasattr(axis.x,'scale'):
+            if hasattr(axis.x, 'scale'):
                 kwargs["xscale"] = axis.x.scale
         ag.append(get_axis_group(
             n, label=get_axis_label(axis), navigate=axis.navigate,
-            attribs=axis.__dict__.keys(),**kwargs))
-        context['axis%i' % n] = axis
+            attribs=axis.__dict__.keys(), **kwargs))
+        context[f'axis{n}'] = axis
     ag = tuple(ag)
     obj.trait_view("traits_view", tui.View(*ag, title="Axes GUI"))
     return obj, {"context": context}
