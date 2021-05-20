@@ -77,7 +77,7 @@ def get_navigation_sliders_group(obj):
                                                 low_name=f'axis{i}.low_value',
                                                 high_name=f'axis{i}.high_value',
                                                 label_width=28,
-                                                format='%i',
+                                                format_str='%5g',
                                                 mode='auto')))
         context[f'axis{i}'] = axis
 
@@ -115,13 +115,15 @@ def get_axis_group(n, navigate, label='', attribs=[], **kwargs):
         tui.Item(f'axis{n}.is_binned'),
     ]
     cal_args = [ ]
-    # The style of the index is chosen to be readonly because of
-    # a bug in Traits 4.0.0 when using context with a Range traits
-    # where the limits are defined by another traits_view
     if navigate:
         group_args.extend([
-            tui.Item(f'axis{n}.index', style='readonly'),
-            tui.Item(f'axis{n}.value', style='readonly'), ])
+            tui.Item(f'axis{n}.index', editor=tui.RangeEditor(
+                                                low_name=f'axis{n}.low_index',
+                                                high_name=f'axis{n}.high_index',
+                                                label_width=28,
+                                                format_str='%i',
+                                                mode='auto')),
+            tui.Item(f'axis{n}.value', style='readonly', format_str='%5g'), ])
     if 'scale' in attribs:
         cal_args.extend([
             tui.Item(f'axis{n}.scale'),
