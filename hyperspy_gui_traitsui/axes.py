@@ -95,6 +95,7 @@ def _get_data_axis_view(obj):
         tui.Item(name='size', style='readonly'),
         tui.Item(name='index_in_array', style='readonly'),
         tui.Item(name='units'),
+        tui.Item(name='is_binned'),
     ]
     cal_args = [ ]
 
@@ -147,12 +148,13 @@ def data_axis_traitsui(obj, **kwargs):
 
 def get_axis_group(n, navigate, label='', attribs = [], **kwargs):
     group_args = [
-        tui.Item('axis%i.name' % n),
-        tui.Item('axis%i.size' % n, style='readonly'),
-        tui.Item('axis%i.index_in_array' % n, style='readonly'),
-        tui.Item('axis%i.low_index' % n, style='readonly'),
-        tui.Item('axis%i.high_index' % n, style='readonly'),
-        tui.Item('axis%i.units' % n),
+        tui.Item(f'axis{n}.name'),
+        tui.Item(f'axis{n}.size', style='readonly'),
+        tui.Item(f'axis{n}.index_in_array', style='readonly'),
+        tui.Item(f'axis{n}.low_index', style='readonly'),
+        tui.Item(f'axis{n}.high_index', style='readonly'),
+        tui.Item(f'axis{n}.units'),
+        tui.Item(f'axis{n}.is_binned'),
     ]
     cal_args = [ ]
     # The style of the index is chosen to be readonly because of
