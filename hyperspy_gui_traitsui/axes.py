@@ -112,9 +112,10 @@ def get_axis_group(n, navigate, label='', attribs=[], **kwargs):
         tui.Item(f'axis{n}.low_index', style='readonly'),
         tui.Item(f'axis{n}.high_index', style='readonly'),
         tui.Item(f'axis{n}.units'),
-        tui.Item(f'axis{n}.is_binned'),
     ]
     cal_args = [ ]
+    if 'is_binned' in attribs:
+        group_args.append(tui.Item(f'axis{n}.is_binned'))
     if navigate:
         group_args.extend([
             tui.Item(f'axis{n}.index', editor=tui.RangeEditor(
