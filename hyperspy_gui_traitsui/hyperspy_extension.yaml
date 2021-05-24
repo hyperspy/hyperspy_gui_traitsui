@@ -15,7 +15,7 @@ GUI:
         function: preferences_traitsui
       hyperspy.DataAxis:
         module: hyperspy_gui_traitsui.axes
-        function: data_axis_traitsui
+        function: axis_gui
       hyperspy.AxesManager:
         module: hyperspy_gui_traitsui.axes
         function: axes_gui
