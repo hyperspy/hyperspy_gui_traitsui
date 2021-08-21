@@ -20,16 +20,15 @@ jobs:
         LABEL: [-RnM]
         include:
           - PYTHON_VERSION: 3.8
-            PIP_SELECTOR: '[tests, coverage]'
-            PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-            LABEL: -non_uniform-coverage
+            PIP_SELECTOR: '[tests]'
+            LABEL: -Release
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests]'
             LABEL: -RnP
-          # Currently failing, re-enable when hyperspy released.
-          #- PYTHON_VERSION: 3.8
-          #  PIP_SELECTOR: '[tests]'
-          #  LABEL: -Release
+          - PYTHON_VERSION: 3.8
+            PIP_SELECTOR: '[tests, coverage]'
+            LABEL: -RnM-coverage
+            PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
 
     steps:
       - uses: actions/checkout@v2
@@ -55,13 +54,6 @@ jobs:
         if: contains( matrix.LABEL, 'RnP')
         run: |
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_patch.zip
-
-      - name: Install HyperSpy (non_uniform_axis)
-        # Test against the hyperspy `non_uniform_axes` branch
-        if: contains( matrix.LABEL, 'non_uniform')
-        shell: bash
-        run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
 
       - name: Install Dependencies
         run: |
