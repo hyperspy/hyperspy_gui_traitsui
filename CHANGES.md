@@ -7,6 +7,7 @@
 * Add `is_binned` to axis GUI, make index of the navigation axis editable ([#39](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/39)).
 * Fix loading GUI ([#38](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/38)).
 * Improve rendering changelog on github and fix hyperlinks in `README.md` ([#42](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/42)).
+* Speed up import time by importing submodules lazily ([#41](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/41))
 
 ## v1.4.0 (2021-04-13)
 
