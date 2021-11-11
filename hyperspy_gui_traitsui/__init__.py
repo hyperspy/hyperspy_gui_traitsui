@@ -16,24 +16,51 @@
 # You should have received a copy of the GNU General Public License
 # along with  HyperSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from hyperspy_gui_traitsui.version import __version__
 
+import importlib
 import logging
 
 import matplotlib
 from traits.etsconfig.api import ETSConfig
+
 from hyperspy.defaults_parser import preferences
 
 
+__all__ = [
+    'axes',
+    'messages',
+    'microscope_parameters',
+    'model',
+    'preferences',
+    'tools',
+    '__version__',
+    ]
+
+
+# mapping following the pattern: from value import key
+_import_mapping = {
+    '__version__':'.version',
+    }
+
+
+def __dir__():
+    return sorted(__all__)
+
+
+def __getattr__(name):
+    if name in __all__:
+        if name in _import_mapping.keys():
+            import_path = 'hyperspy_gui_traitsui' + _import_mapping.get(name)
+            return getattr(importlib.import_module(import_path), name)
+        else:
+            return importlib.import_module("." + name, 'hyperspy_gui_traitsui')
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 _logger = logging.getLogger(__name__)
-
-
 _logger.debug("Initial ETS toolkit set to {}".format(ETSConfig.toolkit))
 
-
-WARN = (
-    not hasattr(preferences.GUIs, "warn_if_guis_are_missing") # hspy < v.1.3.1
-    or preferences.GUIs.warn_if_guis_are_missing)
 
 def set_ets_toolkit(toolkit):
     try:
@@ -51,6 +78,7 @@ def set_ets_toolkit(toolkit):
         _logger.debug("Setting ETS toolkit to %s failed" % toolkit)
         set_ets_toolkit("null")
 
+
 # Get the backend from matplotlib
 backend = matplotlib.get_backend()
 _logger.debug('Loading hyperspy.traitsui_gui')
@@ -63,21 +91,9 @@ elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
     set_ets_toolkit("null")
-    if WARN:
+    if preferences.GUIs.warn_if_guis_are_missing:
         _logger.warning(
             f"The {backend} matplotlib backend is not compatible with the "
             "traitsui GUI elements. For more information, read "
             "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html#possible-warnings-when-importing-hyperspy"
             ".")
-
-if ETSConfig.toolkit and ETSConfig.toolkit != "null":
-    import hyperspy.api_nogui # necessary to register the toolkeys
-    # Register the GUI elements
-    import hyperspy_gui_traitsui.axes
-    import hyperspy_gui_traitsui.model
-    import hyperspy_gui_traitsui.tools
-    import hyperspy_gui_traitsui.preferences
-    import hyperspy_gui_traitsui.microscope_parameters
-    import hyperspy_gui_traitsui.messages
-elif WARN:
-    _logger.warning("The traitsui GUI elements are not available.")
