@@ -21,8 +21,10 @@ with open(path.join(here, "hyperspy_gui_traitsui", "version.py")) as fp:
 
 PROJECT_URLS = {
     'Bug Tracker': 'https://github.com/hyperspy/hyperspy_gui_traitsui/issues',
+    'Changelog' : 'https://github.com/hyperspy/hyperspy_gui_traitsui/blob/main/CHANGES.md',
+    'Conda-Forge' : 'https://anaconda.org/conda-forge/hyperspy-gui-traitsui',
     'Documentation': 'https://hyperspy.org/hyperspy-doc/current/index.html',
-    'Source Code': 'https://github.com/hyperspy_gui_traitsui/hyperspy',
+    'Source Code': 'https://github.com/hyperspy/hyperspy_gui_traitsui',
     'Support' : 'https://gitter.im/hyperspy/hyperspy'
 }
 
