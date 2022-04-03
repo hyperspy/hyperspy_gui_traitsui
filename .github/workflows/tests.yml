@@ -1,0 +1,91 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  run_test_site:
+    name: py${{ matrix.PYTHON_VERSION }}${{ matrix.LABEL }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ETS_TOOLKIT: qt
+      PIP_ARGS: --upgrade -e
+      PYTEST_ARGS: --pyargs hyperspy_gui_traitsui
+      PYTEST_ARGS_COVERAGE:
+    strategy:
+      fail-fast: false
+      matrix:
+        PYTHON_VERSION: ['3.7', '3.9', '3.10']
+        PIP_SELECTOR: ['[tests]']
+        LABEL: [-RnM]
+        include:
+          - PYTHON_VERSION: '3.8'
+            PIP_SELECTOR: '[tests]'
+            LABEL: -Release
+          - PYTHON_VERSION: '3.8'
+            PIP_SELECTOR: '[tests]'
+            LABEL: -RnP
+          - PYTHON_VERSION: '3.8'
+            PIP_SELECTOR: '[tests, coverage]'
+            LABEL: -RnM-coverage
+            PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
+          - os: ubuntu
+            PYTHON_VERSION: '3.7'
+            OLDEST_SUPPORTED_VERSION: true
+            # Matching setup.py
+            DEPENDENCIES: traits==5.0 hyperspy==1.6.2 traitsui==6.1
+            PIP_SELECTOR: '[tests]'
+            # Hang at the end of the test suite run...
+            #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
+            LABEL: -oldest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v3
+        name: Install Python
+        with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+
+      - name: Display version
+        run: |
+          python --version
+          pip --version
+
+      - name: Install oldest supported version
+        if: ${{ matrix.OLDEST_SUPPORTED_VERSION }}
+        run: |
+          pip install ${{ matrix.DEPENDENCIES }}
+
+      - name: Install HyperSpy (RELEASE_next_minor)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnM')
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+
+      - name: Install HyperSpy (RELEASE_next_patch)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnP')
+        run: |
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_patch.zip
+
+      - name: Install Dependencies
+        run: |
+          pip install pyqt5
+          sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
+      - name: Install
+        shell: bash
+        run: |
+          pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+
+      - name: Run test suite
+        # run the tests headlessly
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
+
+      - name: Upload coverage to Codecov
+        if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
+        uses: codecov/codecov-action@v2
+

@@ -21,8 +21,10 @@ with open(path.join(here, "hyperspy_gui_traitsui", "version.py")) as fp:
 
 PROJECT_URLS = {
     'Bug Tracker': 'https://github.com/hyperspy/hyperspy_gui_traitsui/issues',
+    'Changelog' : 'https://github.com/hyperspy/hyperspy_gui_traitsui/blob/main/CHANGES.md',
+    'Conda-Forge' : 'https://anaconda.org/conda-forge/hyperspy-gui-traitsui',
     'Documentation': 'https://hyperspy.org/hyperspy-doc/current/index.html',
-    'Source Code': 'https://github.com/hyperspy_gui_traitsui/hyperspy',
+    'Source Code': 'https://github.com/hyperspy/hyperspy_gui_traitsui',
     'Support' : 'https://gitter.im/hyperspy/hyperspy'
 }
 
@@ -51,9 +53,10 @@ setup(
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Science/Research",
@@ -79,7 +82,11 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['hyperspy>=1.6', 'traitsui>=6.0'],
+    python_requires='~=3.7',
+    install_requires=['traits>=5.0', 'hyperspy>=1.6.2', 'traitsui>=6.1'],
+    extras_require={
+        'tests': ['pytest'],
+        'coverage':["pytest-cov", "codecov"]},
     entry_points={'hyperspy.extensions': 'hyperspy-gui-traitsui = hyperspy_gui_traitsui'},
     package_data={  # Optional
         'hyperspy_gui_traitsui': ['hyperspy_extension.yaml'], },

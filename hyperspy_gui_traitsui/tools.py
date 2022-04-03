@@ -1,9 +1,15 @@
-from traitsui.menu import (OKButton, CancelButton, OKCancelButtons)
-import traitsui.api as tu
+from packaging.version import Version
 
-from hyperspy_gui_traitsui.buttons import *
-from hyperspy_gui_traitsui.utils import add_display_arg
+import traitsui
+import traitsui.api as tu
+from traitsui.file_dialog import FileEditor
+from traitsui.menu import OKButton, CancelButton, OKCancelButtons
+
 from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
+from hyperspy_gui_traitsui.buttons import (
+    OurApplyButton,HelpButton, OurResetButton
+    )
+from hyperspy_gui_traitsui.utils import add_display_arg
 
 
 class SmoothingHandler(tu.Handler):
@@ -51,9 +57,12 @@ class SpanSelectorInSignal1DHandler(tu.Handler):
     def close(self, info, is_ok):
         # Removes the span selector from the plot
         obj = info.object
-        obj.span_selector_switch(False)
+
+        # Apply before switching off the selector
         if is_ok is True:
             self.apply(info)
+        obj.span_selector_switch(False)
+
         if hasattr(obj, 'close'):
             obj.close()
 
@@ -134,13 +143,7 @@ class Calibration2DHandler(LineSelectorInSignal2DHandler):
 class ImageContrastHandler(tu.Handler):
 
     def close(self, info, is_ok):
-        # Removes the span selector from the plot
-        #        info.object.span_selector_switch(False)
-        #        if is_ok is True:
-        #            self.apply(info)
         obj = info.object
-        if obj.is_ok is False:
-            obj.image.update()
         obj.close()
         return True
 
@@ -309,7 +312,8 @@ def smooth_butterworth(obj, **kwargs):
 @add_display_arg
 def load(obj, **kwargs):
     view = tu.View(
-        tu.Group('filename', "lazy"),
+        tu.Group(tu.Item('filename', editor=FileEditor(dialog_style='open')),
+                  "lazy"),
         kind='livemodal',
         buttons=[OKButton, CancelButton],
         title='Load file')
@@ -319,6 +323,14 @@ def load(obj, **kwargs):
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
     from traitsui.qt4.extra.bounds_editor import BoundsEditor
+    
+    # format has been deprecated in Release 7.3.0, replaced by format_str
+    # https://github.com/enthought/traitsui/pull/1684
+    # Remove and simplify when minimum traitsui version is 7.3.0
+    FORMAT_STR = 'format' if Version(traitsui.__version__) < Version('7.0.0') \
+        else 'format_str'
+    def get_format_dict(formatting):
+        return {FORMAT_STR:formatting}
 
     view = tu.View(
         tu.Group(
@@ -346,7 +358,8 @@ def image_constast_editor_traitsui(obj, **kwargs):
                     editor=BoundsEditor(
                         low_name='vmin_percentile',
                         high_name='vmax_percentile',
-                        format='%.2f')),
+                        **get_format_dict('%.2f'),
+                        )),
             show_border=True,
             ),
         tu.Group(
@@ -364,8 +377,9 @@ def image_constast_editor_traitsui(obj, **kwargs):
                     visible_when='norm == "Power"',
                     editor=tu.RangeEditor(low=0.1,
                                           high=3.,
-                                          format='%.3f',
-                                          mode="slider"),
+                                          mode="slider",
+                                          **get_format_dict('%.2f'),
+                                          ),
                     ),
             tu.Item('linthresh',
                     label='Linear threshold',
@@ -373,8 +387,9 @@ def image_constast_editor_traitsui(obj, **kwargs):
                     visible_when='norm == "Symlog"',
                     editor=tu.RangeEditor(low=0.01,
                                           high=1.,
-                                          format='%.3f',
-                                          mode="slider"),
+                                          mode="slider",
+                                          **get_format_dict('%.2f'),
+                                          ),
                     ),
             tu.Item('linscale',
                     label='Linear scale',
@@ -382,8 +397,9 @@ def image_constast_editor_traitsui(obj, **kwargs):
                     visible_when='norm == "Symlog"',
                     editor=tu.RangeEditor(low=0.,
                                           high=10.,
-                                          format='%.3f',
-                                          mode="slider"),
+                                          mode="slider",
+                                          **get_format_dict('%.2f'),
+                                          ),
                     ),
             show_border=True,
             ),

@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui.svg?branch=master)](https://travis-ci.org/hyperspy/hyperspy_gui_traitsui)
-![PyPI](https://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hyperspy_gui_traitsui.svg)
-
+[![Tests](https://github.com/hyperspy/hyperspy_gui_traitsui/workflows/Tests/badge.svg)](https://github.com/hyperspy/hyperspy_gui_traitsui/actions)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hyperspy_gui_traitsui.svg)](https://pypi.org/project/hyperspy-gui-traitsui)
+[![PyPI](https://img.shields.io/pypi/v/hyperspy_gui_traitsui.svg)](https://pypi.org/project/hyperspy-gui-traitsui)
+[![Anaconda Cloud](https://anaconda.org/conda-forge/hyperspy-gui-traitsui/badges/version.svg)](https://anaconda.org/conda-forge/hyperspy-gui-traitsui)
 
 **hyperspy_gui_traitsui** provides traitsui graphic user interface (GUI) elements for hyperspy.
 
@@ -33,7 +33,7 @@ Please refer to the [HyperSpy documentation](http://hyperspy.org/hyperspy-doc/cu
 import hyperspy.api as hs
 hs.preferences.gui(toolkit="traitsui")
 ```
-![alt text](https://github.com/hyperspy/hyperspy_gui_traitsui/raw/master/images/preferences_gui.png "HyperSpy preferences ipywidget")
+![HyperSpy preferences traitsui](https://github.com/hyperspy/hyperspy_gui_traitsui/raw/main/images/preferences_gui.png "HyperSpy preferences traitsui")
 
 
 ## Development
