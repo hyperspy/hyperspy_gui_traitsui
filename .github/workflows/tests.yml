@@ -15,25 +15,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: [3.7, 3.9]
+        PYTHON_VERSION: ['3.7', '3.9', '3.10']
         PIP_SELECTOR: ['[tests]']
         LABEL: [-RnM]
         include:
-          - PYTHON_VERSION: 3.8
+          - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests]'
             LABEL: -Release
-          - PYTHON_VERSION: 3.8
+          - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests]'
             LABEL: -RnP
-          - PYTHON_VERSION: 3.8
+          - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests, coverage]'
             LABEL: -RnM-coverage
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
         name: Install Python
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
@@ -73,5 +73,5 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
 
