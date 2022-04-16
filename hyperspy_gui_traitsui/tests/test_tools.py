@@ -16,10 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with  HyperSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-import numpy as np
-import hyperspy.api as hs
+from packaging.version import Version
 
-from hyperspy.signal_tools import ImageContrastEditor
+import numpy as np
+import pytest
+
+import hyperspy
+import hyperspy.api as hs
+from hyperspy.signal_tools import ImageContrastEditor, BackgroundRemoval
 
 from hyperspy_gui_traitsui.tests.utils import KWARGS
 
@@ -47,3 +51,20 @@ def test_image_contrast_tool():
     for norm in ['Linear', 'Power', 'Log', 'Symlog']:
         ceditor.norm = norm
         assert ceditor.norm == norm
+
+
+@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
+                    reason="Only supported for hyperspy>=1.7")
+def test_remove_background_tool():
+
+    s = hs.datasets.artificial_data.get_core_loss_eels_signal(True, False)
+    s.plot()
+
+    BgR = BackgroundRemoval(s)
+    BgR.gui(**KWARGS)
+    BgR.span_selector.extents = (450., 500.)
+    BgR.span_selector_changed()
+    BgR.apply()
+    assert s.isig[:500.0].data.mean() < 1
+
+

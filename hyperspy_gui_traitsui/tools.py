@@ -25,9 +25,12 @@ class SpanSelectorInSignal1DHandler(tu.Handler):
     def close(self, info, is_ok):
         # Removes the span selector from the plot
         obj = info.object
-        obj.span_selector_switch(False)
+
+        # Apply before switching off the selector
         if is_ok is True:
             self.apply(info)
+        obj.span_selector_switch(False)
+
         if hasattr(obj, 'close'):
             obj.close()
 
