@@ -29,6 +29,15 @@ jobs:
             PIP_SELECTOR: '[tests, coverage]'
             LABEL: -RnM-coverage
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
+          - os: ubuntu
+            PYTHON_VERSION: '3.7'
+            OLDEST_SUPPORTED_VERSION: true
+            # Matching setup.py
+            DEPENDENCIES: traits==5.0 hyperspy==1.6.2 traitsui==6.1
+            PIP_SELECTOR: '[tests]'
+            # Hang at the end of the test suite run...
+            #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
+            LABEL: -oldest
 
     steps:
       - uses: actions/checkout@v3
@@ -42,6 +51,11 @@ jobs:
         run: |
           python --version
           pip --version
+
+      - name: Install oldest supported version
+        if: ${{ matrix.OLDEST_SUPPORTED_VERSION }}
+        run: |
+          pip install ${{ matrix.DEPENDENCIES }}
 
       - name: Install HyperSpy (RELEASE_next_minor)
         shell: bash
