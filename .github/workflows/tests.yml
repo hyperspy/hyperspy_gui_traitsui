@@ -33,7 +33,7 @@ jobs:
             PYTHON_VERSION: '3.7'
             OLDEST_SUPPORTED_VERSION: true
             # Matching setup.py
-            DEPENDENCIES: traits==4.5 hyperspy==1.6.2 traitsui==6.0
+            DEPENDENCIES: traits==5.0 hyperspy==1.6.2 traitsui==6.1
             PIP_SELECTOR: '[tests]'
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
