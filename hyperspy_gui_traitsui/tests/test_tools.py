@@ -23,7 +23,11 @@ import pytest
 
 import hyperspy
 import hyperspy.api as hs
-from hyperspy.signal_tools import ImageContrastEditor, BackgroundRemoval
+from hyperspy.signal_tools import (
+    ImageContrastEditor,
+    BackgroundRemoval,
+    Signal2DCalibration,
+    )
 
 from hyperspy_gui_traitsui.tests.utils import KWARGS
 
@@ -68,3 +72,29 @@ def test_remove_background_tool():
     assert s.isig[:500.0].data.mean() < 1
 
 
+@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
+                    reason="Only supported for hyperspy>=1.7")
+def test_signal_2d_calibration():
+    s = hs.signals.Signal2D(np.zeros((100, 100)))
+    s.plot()
+    s2dc = Signal2DCalibration(s)
+    s2dc.gui(**KWARGS)
+    s2dc.x0, s2dc.x1, s2dc.y0, s2dc.y1 = 50, 50, 10, 90
+    s2dc.new_length = 160
+    s2dc.apply()
+    assert s.axes_manager[0].scale == 2
+    assert s.axes_manager[1].scale == 2
+
+
+@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
+                    reason="Only supported for hyperspy>=1.7")
+def test_signal_2d_calibration_3d_data():
+    s = hs.signals.Signal2D(np.zeros((5, 100, 100)))
+    s.plot()
+    s2dc = Signal2DCalibration(s)
+    s2dc.gui(**KWARGS)
+    s2dc.x0, s2dc.x1, s2dc.y0, s2dc.y1 = 50, 50, 10, 90
+    s2dc.new_length = 160
+    s2dc.apply()
+    assert s.axes_manager.signal_axes[0].scale == 2
+    assert s.axes_manager.signal_axes[1].scale == 2
