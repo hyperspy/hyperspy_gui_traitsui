@@ -72,7 +72,8 @@ def test_remove_background_tool():
     assert s.isig[:500.0].data.mean() < 1
 
 
-
+@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
+                    reason="Only supported for hyperspy>=1.7")
 def test_signal_2d_calibration():
     s = hs.signals.Signal2D(np.zeros((100, 100)))
     s.plot()
@@ -85,6 +86,8 @@ def test_signal_2d_calibration():
     assert s.axes_manager[1].scale == 2
 
 
+@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
+                    reason="Only supported for hyperspy>=1.7")
 def test_signal_2d_calibration_3d_data():
     s = hs.signals.Signal2D(np.zeros((5, 100, 100)))
     s.plot()
