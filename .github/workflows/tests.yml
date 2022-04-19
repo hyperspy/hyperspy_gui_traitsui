@@ -37,7 +37,7 @@ jobs:
             PIP_SELECTOR: '[tests]'
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-            LABEL: -oldest
+            LABEL: -RnM-oldest
 
     steps:
       - uses: actions/checkout@v3

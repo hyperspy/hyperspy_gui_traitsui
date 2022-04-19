@@ -10,6 +10,7 @@
 * Speed up import time by importing submodules lazily and drop support for python 3.6 ([#41](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/41)).
 * Add python 3.10 to github CI and update github actions versions ([#43](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/43)).
 * Fix traistui deprecation warning and add oldest supported version of dependencies build to github CI ([#45](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/45))
+* Add GUI for the calibration method of signal2D ([#3](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/3))
 
 ## v1.4.0 (2021-04-13)
 
