@@ -83,7 +83,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     python_requires='~=3.7',
-    install_requires=['traits>=5.0', 'hyperspy>=1.6.2', 'traitsui>=6.1'],
+    install_requires=['traits>=5.0', 'hyperspy>=1.7.0', 'traitsui>=6.1'],
     extras_require={
         'tests': ['pytest'],
         'coverage':["pytest-cov", "codecov"]},
