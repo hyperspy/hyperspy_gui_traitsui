@@ -2,6 +2,8 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
+## v1.6.0.dev0 (UNRELEASED)
+
 ## v1.5.0 (2022-04-26)
 
 * Add `is_binned` to axis GUI, make index of the navigation axis editable ([#39](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/39)).
