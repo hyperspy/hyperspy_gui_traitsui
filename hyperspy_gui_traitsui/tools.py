@@ -2,7 +2,6 @@ from packaging.version import Version
 
 import traitsui
 import traitsui.api as tu
-from traitsui.file_dialog import FileEditor
 from traitsui.menu import OKButton, CancelButton, OKCancelButtons
 
 from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
@@ -312,7 +311,7 @@ def smooth_butterworth(obj, **kwargs):
 @add_display_arg
 def load(obj, **kwargs):
     view = tu.View(
-        tu.Group(tu.Item('filename', editor=FileEditor(dialog_style='open')),
+        tu.Group(tu.Item('filename', editor=tu.FileEditor(dialog_style='open')),
                   "lazy"),
         kind='livemodal',
         buttons=[OKButton, CancelButton],
