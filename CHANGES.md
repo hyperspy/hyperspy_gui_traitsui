@@ -2,7 +2,7 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
-## v1.5.1.dev0 (UNRELEASED)
+## v1.5.1 (2022-05-03)
 
 * Fix import tools error when running hyperspy test suite ([#47](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/47))
 
