@@ -96,10 +96,12 @@ class SpanSelectorInSignal1DHandler(tu.Handler):
 class Signal1DRangeSelectorHandler(tu.Handler):
 
     def close(self, info, is_ok):
-        # Removes the span selector from the plot
-        info.object.span_selector_switch(False)
         if is_ok is True:
             self.apply(info)
+
+        # Removes the span selector from the plot
+        info.object.span_selector_switch(False)
+
         return True
 
     def apply(self, info, *args, **kwargs):
@@ -107,11 +109,16 @@ class Signal1DRangeSelectorHandler(tu.Handler):
 
         """
         obj = info.object
-        if obj.ss_left_value != obj.ss_right_value:
-            info.object.span_selector_switch(False)
-            for method, cls in obj.on_close:
-                method(cls, obj.ss_left_value, obj.ss_right_value)
-            info.object.span_selector_switch(True)
+        extents = obj.span_selector.extents
+        # when the traits and span extent are out of sync, which happen after
+        # "apply" and before making a new selection
+        if obj.ss_left_value == obj.ss_right_value or extents[0] == extents[1]:
+            return
+
+        obj.span_selector_switch(False)
+        for method, cls in obj.on_close:
+            method(cls, obj.ss_left_value, obj.ss_right_value)
+        obj.span_selector_switch(True)
 
         obj.is_ok = True
 

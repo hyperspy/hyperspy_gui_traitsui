@@ -1,7 +1,6 @@
 
 import numpy as np
 import hyperspy.api as hs
-import pytest
 
 from hyperspy_gui_traitsui.tests.utils import KWARGS
 
@@ -33,11 +32,6 @@ class TestAxes:
 
 
 def test_non_uniform_axes():
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        pytest.skip("HyperSpy version doesn't support non-uniform axis")
-
     dict0 = {'scale': 1.0, 'size':2}
     dict1 = {'expression': 'a / (x+b)', 'a': 1240, 'b': 1, 'size': 3,
              'name': 'plumage', 'units': 'beautiful', 'navigate': False}

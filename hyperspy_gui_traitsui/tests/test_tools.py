@@ -16,12 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with  HyperSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from packaging.version import Version
-
 import numpy as np
-import pytest
 
-import hyperspy
 import hyperspy.api as hs
 from hyperspy.signal_tools import (
     ImageContrastEditor,
@@ -57,8 +53,6 @@ def test_image_contrast_tool():
         assert ceditor.norm == norm
 
 
-@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
-                    reason="Only supported for hyperspy>=1.7")
 def test_remove_background_tool():
 
     s = hs.datasets.artificial_data.get_core_loss_eels_signal(True, False)
@@ -72,8 +66,6 @@ def test_remove_background_tool():
     assert s.isig[:500.0].data.mean() < 1
 
 
-@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
-                    reason="Only supported for hyperspy>=1.7")
 def test_signal_2d_calibration():
     s = hs.signals.Signal2D(np.zeros((100, 100)))
     s.plot()
@@ -86,8 +78,6 @@ def test_signal_2d_calibration():
     assert s.axes_manager[1].scale == 2
 
 
-@pytest.mark.skipif(Version(hyperspy.__version__) < Version("1.7.0.dev"),
-                    reason="Only supported for hyperspy>=1.7")
 def test_signal_2d_calibration_3d_data():
     s = hs.signals.Signal2D(np.zeros((5, 100, 100)))
     s.plot()
