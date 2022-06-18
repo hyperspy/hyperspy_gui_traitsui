@@ -4,6 +4,9 @@
 
 ## v1.6.0.dev0 (UNRELEASED)
 
+
+## v1.5.2 (2022-06-18)
+
 * Fix error when pressing "OK" button after "Apply" was pressed in `crop_signal1D` ([#49](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/49))
 
 ## v1.5.1 (2022-05-03)
