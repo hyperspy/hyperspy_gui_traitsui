@@ -37,9 +37,6 @@ GUI:
       hyperspy.Signal1D.contrast_editor:
         module: hyperspy_gui_traitsui.tools
         function: image_constast_editor_traitsui
-      hyperspy.Signal1D.integrate_in_range:
-        module: hyperspy_gui_traitsui.tools
-        function: integrate_in_range_traitsui
       hyperspy.Signal1D.remove_background:
         module: hyperspy_gui_traitsui.tools
         function: remove_background_traitsui

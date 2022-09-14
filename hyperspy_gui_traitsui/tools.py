@@ -329,7 +329,7 @@ def load(obj, **kwargs):
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
     from traitsui.qt4.extra.bounds_editor import BoundsEditor
-    
+
     # format has been deprecated in Release 7.3.0, replaced by format_str
     # https://github.com/enthought/traitsui/pull/1684
     # Remove and simplify when minimum traitsui version is 7.3.0
@@ -417,16 +417,6 @@ def image_constast_editor_traitsui(obj, **kwargs):
                  OurResetButton,],
         title='Constrast adjustment tool',
         resizable=True)
-    return obj, {"view": view}
-
-
-@add_display_arg
-def integrate_in_range_traitsui(obj, **kwargs):
-    view = tu.View(
-        buttons=[OKButton, CancelButton],
-        title='Integrate in range',
-        handler=SpanSelectorInSignal1DHandler,
-    )
     return obj, {"view": view}
 
 
