@@ -17,17 +17,20 @@ jobs:
       matrix:
         PYTHON_VERSION: ['3.7', '3.9', '3.10']
         PIP_SELECTOR: ['[tests]']
-        LABEL: [-RnM]
+        LABEL: [-RnMinor]
         include:
+          - PYTHON_VERSION: '3.8'
+            PIP_SELECTOR: '[tests]'
+            LABEL: -RnMajor
           - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests]'
             LABEL: -Release
           - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests]'
-            LABEL: -RnP
+            LABEL: -RnPatch
           - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests, coverage]'
-            LABEL: -RnM-coverage
+            LABEL: -RnMinor-coverage
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
           - os: ubuntu
             PYTHON_VERSION: '3.7'
@@ -37,7 +40,7 @@ jobs:
             PIP_SELECTOR: '[tests]'
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-            LABEL: -RnM-oldest
+            LABEL: -RnMinor-oldest
 
     steps:
       - uses: actions/checkout@v3
@@ -72,13 +75,24 @@ jobs:
 
       - name: Install HyperSpy (RELEASE_next_minor)
         shell: bash
-        if: contains( matrix.LABEL, 'RnM')
+        if: contains( matrix.LABEL, 'RnMinor')
         run: |
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
 
+      - name: Install HyperSpy (RELEASE_next_major)
+        shell: bash
+        if: contains( matrix.LABEL, 'RnMajor')
+        run: |
+          # Remove once rosettasciio is released
+          pip install https://github.com/hyperspy/rosettasciio/archive/refs/heads/main.zip#egg=rosettasciio
+
+          #pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_major.zip
+          # Remove when the following branch is merged
+          pip install https://github.com/ericpre/hyperspy/archive/refs/heads/remove_deprecation_histo_integrate.zip
+
       - name: Install HyperSpy (RELEASE_next_patch)
         shell: bash
-        if: contains( matrix.LABEL, 'RnP')
+        if: contains( matrix.LABEL, 'RnPatch')
         run: |
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_patch.zip
 
