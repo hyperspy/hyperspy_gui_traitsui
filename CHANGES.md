@@ -2,8 +2,9 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
-## v1.6.0.dev0 (UNRELEASED)
+## v2.0.0.dev0 (UNRELEASED)
 
+* Added github action for code scanning using the codeQL engine. ([#51](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/51))
 
 ## v1.5.2 (2022-06-18)
 
@@ -31,4 +32,3 @@ The is a minor release:
 * Add iterpath to fit component GUI ([#34](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/34)).
 * Make axes gui compatible with non-unform axis ([#25](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/25)).
 * Use GitHub Actions to run the test suite and make release ([#32](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/32)).
-
