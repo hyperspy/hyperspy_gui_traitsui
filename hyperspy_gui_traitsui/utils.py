@@ -9,6 +9,7 @@ def add_display_arg(f):
         obj, kwargs = f(*args, **kwargs)
         if display:
             obj.edit_traits(**kwargs)
+            return None
         else:
             return obj
     return wrapper

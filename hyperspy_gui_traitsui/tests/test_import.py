@@ -18,7 +18,8 @@ def test_ui_registry():
 
 
 def test_import_version():
-    from hyperspy_gui_traitsui import __version__
+    import hyperspy_gui_traitsui
+    hyperspy_gui_traitsui.__version__
 
 
 def test_import():
