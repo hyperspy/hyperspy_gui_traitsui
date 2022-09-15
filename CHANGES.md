@@ -5,6 +5,7 @@
 ## v2.0.0.dev0 (UNRELEASED)
 
 * Added github action for code scanning using the codeQL engine. ([#51](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/51))
+* Fix pyqt installation on GitHub CI. ([#52](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/52))
 
 ## v1.5.2 (2022-06-18)
 
