@@ -33,7 +33,7 @@ jobs:
             PYTHON_VERSION: '3.7'
             OLDEST_SUPPORTED_VERSION: true
             # Matching setup.py
-            DEPENDENCIES: traits==5.0 hyperspy==1.6.2 traitsui==6.1
+            DEPENDENCIES: traits==5.0 hyperspy==1.6.2 traitsui==6.1 pyqt5==5.12.0
             PIP_SELECTOR: '[tests]'
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
@@ -46,6 +46,19 @@ jobs:
         name: Install Python
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
+
+      - name: 'Install Ubuntu packages for Qt'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install qt5-default
+          sudo apt-get install libxkbcommon-x11-0
+          sudo apt-get install libxcb-icccm4
+          sudo apt-get install libxcb-image0
+          sudo apt-get install libxcb-keysyms1
+          sudo apt-get install libxcb-randr0
+          sudo apt-get install libxcb-render-util0
+          sudo apt-get install libxcb-xinerama0
 
       - name: Display version
         run: |
@@ -72,12 +85,15 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install pyqt5
-          sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
 
       - name: Install
         shell: bash
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+
+      - name: Pip list
+        run: |
+          pip list
 
       - name: Run test suite
         # run the tests headlessly
@@ -88,4 +104,3 @@ jobs:
       - name: Upload coverage to Codecov
         if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
         uses: codecov/codecov-action@v2
-
