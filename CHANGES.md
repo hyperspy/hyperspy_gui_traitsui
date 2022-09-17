@@ -6,6 +6,7 @@
 
 * Added github action for code scanning using the codeQL engine. ([#51](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/51))
 * Fix pyqt installation on GitHub CI. ([#52](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/52))
+* Remove `integrate_in_range` widgets, as the corresponding method has been removed in hyperspy 2.0. ([#53](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/53))
 
 ## v1.5.2 (2022-06-18)
 
