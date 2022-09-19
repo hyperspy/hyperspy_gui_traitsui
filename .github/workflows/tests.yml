@@ -114,4 +114,4 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: contains( matrix.PYTEST_ARGS_COVERAGE, 'cov')
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
