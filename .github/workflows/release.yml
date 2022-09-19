@@ -89,9 +89,9 @@ jobs:
 
       - name: Run test suite
         # run the tests headlessly
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: pytest --pyargs hyperspy_gui_traitsui
+        run: |
+          sudo apt-get install xvfb
+          xvfb-run pytest --pyargs hyperspy_gui_traitsui
 
       - name: Publish wheels to PyPI
         if: github.repository_owner == 'hyperspy'
