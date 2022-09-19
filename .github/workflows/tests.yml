@@ -84,11 +84,8 @@ jobs:
         if: contains( matrix.LABEL, 'RnMajor')
         run: |
           # Remove once rosettasciio is released
-          pip install https://github.com/hyperspy/rosettasciio/archive/refs/heads/main.zip#egg=rosettasciio
-
-          #pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_major.zip
-          # Remove when the following branch is merged
-          pip install https://github.com/ericpre/hyperspy/archive/refs/heads/remove_deprecation_histo_integrate.zip
+          pip install https://github.com/hyperspy/rosettasciio/archive/refs/heads/main.zip
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_major.zip
 
       - name: Install HyperSpy (RELEASE_next_patch)
         shell: bash
