@@ -328,7 +328,11 @@ def load(obj, **kwargs):
 
 @add_display_arg
 def image_constast_editor_traitsui(obj, **kwargs):
-    from traitsui.qt4.extra.bounds_editor import BoundsEditor
+    # In traitsui 8.0.0, traitsui.qt4 was changed to traitsui.qt
+    if Version(traitsui.__version__) >= Version('8.0.0'):
+        from traitsui.qt.extra.bounds_editor import BoundsEditor
+    else:
+        from traitsui.qt4.extra.bounds_editor import BoundsEditor
 
     # format has been deprecated in Release 7.3.0, replaced by format_str
     # https://github.com/enthought/traitsui/pull/1684
