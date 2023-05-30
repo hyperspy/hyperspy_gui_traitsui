@@ -327,7 +327,7 @@ def load(obj, **kwargs):
 
 
 @add_display_arg
-def image_constast_editor_traitsui(obj, **kwargs):
+def image_contrast_editor_traitsui(obj, **kwargs):
     # In traitsui 8.0.0, traitsui.qt4 was changed to traitsui.qt
     if Version(traitsui.__version__) >= Version('8.0.0'):
         from traitsui.qt.extra.bounds_editor import BoundsEditor
@@ -419,7 +419,7 @@ def image_constast_editor_traitsui(obj, **kwargs):
                  HelpButton,
                  OurApplyButton,
                  OurResetButton,],
-        title='Constrast adjustment tool',
+        title='Contrast adjustment tool',
         resizable=True)
     return obj, {"view": view}
 

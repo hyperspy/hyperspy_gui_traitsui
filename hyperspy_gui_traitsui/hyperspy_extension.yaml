@@ -36,7 +36,7 @@ GUI:
         function: smooth_butterworth
       hyperspy.Signal1D.contrast_editor:
         module: hyperspy_gui_traitsui.tools
-        function: image_constast_editor_traitsui
+        function: image_contrast_editor_traitsui
       hyperspy.Signal1D.integrate_in_range:
         module: hyperspy_gui_traitsui.tools
         function: integrate_in_range_traitsui
