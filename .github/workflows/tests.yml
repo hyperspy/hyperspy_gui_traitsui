@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: ['3.7', '3.9', '3.10']
+        PYTHON_VERSION: ['3.7', '3.9', '3.10', '3.11']
         PIP_SELECTOR: ['[tests]']
         LABEL: [-RnM]
         include:
@@ -33,7 +33,7 @@ jobs:
             PYTHON_VERSION: '3.7'
             OLDEST_SUPPORTED_VERSION: true
             # Matching setup.py
-            DEPENDENCIES: traits==5.0 hyperspy==1.6.2 traitsui==6.1 pyqt5==5.12.0
+            DEPENDENCIES: traits==5.0 hyperspy==1.7.0 traitsui==6.1 pyqt5==5.12.0
             PIP_SELECTOR: '[tests]'
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
