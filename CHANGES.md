@@ -8,6 +8,7 @@
 
 ## v1.5.3 (2023-05-30)
 
+* Add explicit support for python 3.11 ([#62](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/62))
 * Fix typo in `ImageContractEditor` GUI. ([#59](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/59))
 * Exclude `traitsui` 8.0.0 because of a regression in the `BoundsEditor` ([#61](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/61))
 * Fix pyqt installation on GitHub CI. ([#52](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/52))
