@@ -91,9 +91,8 @@ elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
     set_ets_toolkit("null")
-    if preferences.GUIs.warn_if_guis_are_missing:
-        _logger.warning(
-            f"The {backend} matplotlib backend is not compatible with the "
-            "traitsui GUI elements. For more information, read "
-            "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html#possible-warnings-when-importing-hyperspy"
-            ".")
+    _logger.warning(
+        f"The {backend} matplotlib backend is not compatible with the "
+        "traitsui GUI elements. For more information, read "
+        "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html#possible-warnings-when-importing-hyperspy"
+        ".")
