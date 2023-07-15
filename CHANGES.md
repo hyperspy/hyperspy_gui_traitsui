@@ -5,6 +5,7 @@
 ## v2.0.0.dev0 (UNRELEASED)
 * Added github action for code scanning using the codeQL engine. ([#51](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/51))
 * Remove `integrate_in_range` widgets, as the corresponding method has been removed in hyperspy 2.0. ([#53](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/53))
+* Remove use of deprecated HyperSpy preferences `warn_if_guis_are_missing`. ([#58](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/58))
 
 ## v1.5.3 (2023-05-30)
 
