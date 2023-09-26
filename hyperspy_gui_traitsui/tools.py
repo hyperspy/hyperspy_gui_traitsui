@@ -540,11 +540,8 @@ def spikes_removal_traitsui(obj, **kwargs):
         ),
         tu.Group(
             'add_noise',
-            'interpolator_kind',
             'default_spike_width',
-            tu.Group(
-                'spline_order',
-                enabled_when='interpolator_kind == "Spline"'),
+            'spline_order',
             show_border=True,
             label='Advanced settings'),
     ),
