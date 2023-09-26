@@ -15,32 +15,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: ['3.7', '3.9', '3.10', '3.11']
+        PYTHON_VERSION: ['3.9', '3.10', '3.11']
         PIP_SELECTOR: ['[tests]']
-        LABEL: [-RnMinor]
+        LABEL: [-RnMajor]
         include:
-          - PYTHON_VERSION: '3.8'
-            PIP_SELECTOR: '[tests]'
-            LABEL: -RnMajor
-          - PYTHON_VERSION: '3.8'
-            PIP_SELECTOR: '[tests]'
-            LABEL: -Release
-          - PYTHON_VERSION: '3.8'
-            PIP_SELECTOR: '[tests]'
-            LABEL: -RnPatch
-          - PYTHON_VERSION: '3.8'
+          # - PYTHON_VERSION: '3.8'
+          #   PIP_SELECTOR: '[tests]'
+          #   LABEL: -RnMinor
+          # - PYTHON_VERSION: '3.8'
+          #   PIP_SELECTOR: '[tests]'
+          #   LABEL: -Release
+          # - PYTHON_VERSION: '3.8'
+          #   PIP_SELECTOR: '[tests]'
+          #   LABEL: -RnPatch
+          - PYTHON_VERSION: '3.11'
             PIP_SELECTOR: '[tests, coverage]'
-            LABEL: -RnMinor-coverage
+            LABEL: -RnMajor-coverage
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
           - os: ubuntu
-            PYTHON_VERSION: '3.7'
+            PYTHON_VERSION: '3.8'
             OLDEST_SUPPORTED_VERSION: true
             # Matching setup.py
-            DEPENDENCIES: traits==5.0 hyperspy==1.7.0 traitsui==6.1 pyqt5==5.12.0
+            DEPENDENCIES: traits==5.0 traitsui==6.1 pyqt5==5.12.0
             PIP_SELECTOR: '[tests]'
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-            LABEL: -RnMinor-oldest
+            LABEL: -RnMajor-oldest
 
     steps:
       - uses: actions/checkout@v4
@@ -83,8 +83,6 @@ jobs:
         shell: bash
         if: contains( matrix.LABEL, 'RnMajor')
         run: |
-          # Remove once rosettasciio is released
-          pip install https://github.com/hyperspy/rosettasciio/archive/refs/heads/main.zip
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_major.zip
 
       - name: Install HyperSpy (RELEASE_next_patch)
