@@ -19,6 +19,18 @@ PREFERENCES_VIEW = tui.View(
               label='GUIs'),
     tui.Group(tui.Item('Plot', style='custom', show_label=False, ),
               label='Plot'),
+    title='Preferences',
+    buttons=[SaveButton, CancelButton],
+    handler=PreferencesHandler,)
+
+
+@add_display_arg
+def preferences_traitsui(obj, **kwargs):
+    obj.trait_view("traits_view", PREFERENCES_VIEW)
+    return obj, {}
+
+
+EXSPY_PREFERENCES_VIEW = tui.View(
     tui.Group(tui.Item('EELS', style='custom', show_label=False, ),
               label='EELS'),
     tui.Group(tui.Item('EDS', style='custom', show_label=False, ),
@@ -29,6 +41,6 @@ PREFERENCES_VIEW = tui.View(
 
 
 @add_display_arg
-def preferences_traitsui(obj, **kwargs):
-    obj.trait_view("traits_view", PREFERENCES_VIEW)
+def exspy_preferences_traitsui(obj, **kwargs):
+    obj.trait_view("traits_view", EXSPY_PREFERENCES_VIEW)
     return obj, {}
