@@ -55,13 +55,13 @@ GUI:
       hyperspy.Model1D.fit_component:
         module: hyperspy_gui_traitsui.model
         function: fit_component_traitsui
-      hyperspy.microscope_parameters_EELS:
+      exspy.microscope_parameters_EELS:
         module: hyperspy_gui_traitsui.microscope_parameters
         function: microscope_parameters_EELS
-      hyperspy.microscope_parameters_EDS_SEM:
+      exspy.microscope_parameters_EDS_SEM:
         module: hyperspy_gui_traitsui.microscope_parameters
         function: microscope_parameters_EDS_SEM
-      hyperspy.microscope_parameters_EDS_TEM:
+      exspy.microscope_parameters_EDS_TEM:
         module: hyperspy_gui_traitsui.microscope_parameters
         function: microscope_parameters_EDS_TEM
       hyperspy.SpanROI:
