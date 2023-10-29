@@ -32,8 +32,7 @@ jobs:
             PIP_SELECTOR: '[tests, coverage]'
             LABEL: -RnMajor-coverage
             PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
-          - os: ubuntu
-            PYTHON_VERSION: '3.8'
+          - PYTHON_VERSION: '3.8'
             OLDEST_SUPPORTED_VERSION: true
             # Matching setup.py
             DEPENDENCIES: traits==5.0 traitsui==6.1 pyqt5==5.12.0
@@ -41,6 +40,10 @@ jobs:
             # Hang at the end of the test suite run...
             #PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
             LABEL: -RnMajor-oldest
+          - PYTHON_VERSION: '3.8'
+            PIP_ARGS: --pre --upgrade
+            LABEL: -mininum-RnMajor
+            PIP_SELECTOR: '[tests]'
 
     steps:
       - uses: actions/checkout@v4
@@ -90,6 +93,12 @@ jobs:
         if: contains( matrix.LABEL, 'RnPatch')
         run: |
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_patch.zip
+
+      - name: Install exSpy
+        if: "!contains( matrix.LABEL, 'mininum')"
+        shell: bash
+        run: |
+          pip install https://github.com/hyperspy/exspy/archive/main.zip
 
       - name: Install Dependencies
         run: |
