@@ -17,6 +17,7 @@
 # along with  HyperSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
+import pytest
 
 import hyperspy.api as hs
 from hyperspy.signal_tools import (
@@ -54,8 +55,8 @@ def test_image_contrast_tool():
 
 
 def test_remove_background_tool():
-
-    s = hs.datasets.artificial_data.get_core_loss_eels_signal(True, False)
+    exspy = pytest.importorskip("exspy")
+    s = exspy.data.EELS_MnFe(True, False)
     s.plot()
 
     BgR = BackgroundRemoval(s)
