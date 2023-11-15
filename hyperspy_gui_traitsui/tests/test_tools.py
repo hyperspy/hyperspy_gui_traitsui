@@ -31,6 +31,8 @@ from hyperspy_gui_traitsui.tests.utils import KWARGS
 
 def test_image_contrast_tool():
 
+    pytest.importorskip("PyQt5")
+
     s = hs.signals.Signal2D(np.random.random(10000).reshape((100, 100)))
     s.plot()
 
