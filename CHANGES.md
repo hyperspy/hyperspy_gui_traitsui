@@ -2,6 +2,8 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
+## v2.1 (UNRELEASED)
+
 ## v2.0 (2023-11-16)
 
 * Consolidate package metadata into `pyproject.toml` ([#67](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/67))
