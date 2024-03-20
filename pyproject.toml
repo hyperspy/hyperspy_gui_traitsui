@@ -40,7 +40,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.entry-points."hyperspy.extensions"]
-hyperspy-gui-traitsui = "hyperspy_gui_traitsui"
+hyperspy_gui_traitsui = "hyperspy_gui_traitsui"
 
 [project.license]
 file = "LICENSE"
