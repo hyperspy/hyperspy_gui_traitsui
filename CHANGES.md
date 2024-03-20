@@ -4,6 +4,8 @@
 
 ## v2.1 (UNRELEASED)
 
+* Fix regression with editable installation ([#74](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/74)).
+
 ## v2.0 (2023-11-16)
 
 * Consolidate package metadata into `pyproject.toml` ([#67](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/67))
