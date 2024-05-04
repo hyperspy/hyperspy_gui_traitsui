@@ -4,6 +4,8 @@
 
 ## v2.1 (UNRELEASED)
 
+* Fix getting version with editable installation ([#75](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/75)).
+* Add releasing guide and release script ([#75](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/75)).
 * Fix regression with editable installation ([#74](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/74)).
 
 ## v2.0 (2023-11-16)
