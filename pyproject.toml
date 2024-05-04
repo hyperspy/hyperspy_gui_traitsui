@@ -71,6 +71,7 @@ source = ["hyperspy_gui_traitsui"]
 omit = [
   "hyperspy_gui_traitsui/tests/*",
   "hyperspy_gui_traitsui/conftest.py",
+  "prepare_release.py",
 ]
 
 [tool.coverage.report]
