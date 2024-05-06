@@ -17,6 +17,7 @@ on:
       - '**/*.md'
       - '**/*.rst'
       - '**/*.txt'
+      - 'hyperspy_gui_traitsui/_external/*.py'
   schedule:
     # run once a week
     - cron: '16 13 * * 5'
