@@ -43,7 +43,6 @@ jobs:
         # correct version with setuptools_scm
         run: |
           git remote add upstream https://github.com/hyperspy/hyperspy_gui_traitsui.git
-          git fetch --prune --unshallow
           git fetch upstream --tags
 
       - uses: actions/setup-python@v5
