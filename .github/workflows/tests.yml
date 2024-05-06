@@ -75,12 +75,16 @@ jobs:
       - name: Install HyperSpy (RELEASE_next_major)
         if: contains( matrix.LABEL, 'RnM')
         run: |
-          pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_major
+          # pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_major
+          # revert back when hyperspy 2.1 is released 
+          pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_minor
 
       - name: Install HyperSpy (RELEASE_next_patch)
         if: contains( matrix.LABEL, 'RnP')
         run: |
-          pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_patch
+          # pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_patch
+          # revert back when hyperspy 2.1 is released 
+          pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_minor
 
       - name: Install exSpy
         if: ${{ ! contains( matrix.LABEL, 'minimum') }}
