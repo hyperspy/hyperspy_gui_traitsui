@@ -35,7 +35,7 @@ dependencies = [
   "hyperspy>=2.1.0.dev119",
   "link_traits",
   "traits>=5.0",
-  "traitsui>=6.1,!=8.0.0",
+  "traitsui>=7.3",
 ]
 dynamic = ["version"]
 
