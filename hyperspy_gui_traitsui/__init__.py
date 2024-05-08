@@ -101,13 +101,13 @@ def set_ets_toolkit(toolkit):
 
 
 # Get the backend from matplotlib
-backend = matplotlib.get_backend()
+backend = matplotlib.get_backend().lower()
 _logger.debug('Loading hyperspy.traitsui_gui')
 _logger.debug('Current MPL backend: %s', backend)
-if "WX" in backend:
+if "wx" in backend:
     set_ets_toolkit("wx")
-elif "Qt" in backend:
-    set_ets_toolkit("qt4")
+elif "qt" in backend:
+    set_ets_toolkit("qt")
 elif ETSConfig.toolkit == "":
     # The toolkit has not been set and no supported toolkit is available, so
     # setting it to "null"
