@@ -1,5 +1,3 @@
-from packaging.version import Version
-
 import traitsui
 import traitsui.api as tu
 from traitsui.menu import OKButton, CancelButton, OKCancelButtons
@@ -328,19 +326,7 @@ def load(obj, **kwargs):
 
 @add_display_arg
 def image_contrast_editor_traitsui(obj, **kwargs):
-    # In traitsui 8.0.0, traitsui.qt4 was changed to traitsui.qt
-    if Version(traitsui.__version__) >= Version('8.0.0'):
-        from traitsui.qt.extra.bounds_editor import BoundsEditor
-    else:
-        from traitsui.qt4.extra.bounds_editor import BoundsEditor
-
-    # format has been deprecated in Release 7.3.0, replaced by format_str
-    # https://github.com/enthought/traitsui/pull/1684
-    # Remove and simplify when minimum traitsui version is 7.3.0
-    FORMAT_STR = 'format' if Version(traitsui.__version__) < Version('7.0.0') \
-        else 'format_str'
-    def get_format_dict(formatting):
-        return {FORMAT_STR:formatting}
+    from hyperspy_gui_traitsui._external.bounds_editor import BoundsEditor
 
     view = tu.View(
         tu.Group(
@@ -363,12 +349,12 @@ def image_contrast_editor_traitsui(obj, **kwargs):
                     label='Auto',
                     show_label=True,
                     ),
-            tu.Item('vmin_percentile',
+            tu.Item('percentile_range',
                     label='vmin/vmax percentile',
                     editor=BoundsEditor(
                         low_name='vmin_percentile',
                         high_name='vmax_percentile',
-                        **get_format_dict('%.2f'),
+                        format_str='%.2f',
                         )),
             show_border=True,
             ),
@@ -388,7 +374,7 @@ def image_contrast_editor_traitsui(obj, **kwargs):
                     editor=tu.RangeEditor(low=0.1,
                                           high=3.,
                                           mode="slider",
-                                          **get_format_dict('%.2f'),
+                                          format_str='%.2f',
                                           ),
                     ),
             tu.Item('linthresh',
@@ -398,7 +384,7 @@ def image_contrast_editor_traitsui(obj, **kwargs):
                     editor=tu.RangeEditor(low=0.01,
                                           high=1.,
                                           mode="slider",
-                                          **get_format_dict('%.2f'),
+                                          format_str='%.2f',
                                           ),
                     ),
             tu.Item('linscale',
@@ -408,7 +394,7 @@ def image_contrast_editor_traitsui(obj, **kwargs):
                     editor=tu.RangeEditor(low=0.,
                                           high=10.,
                                           mode="slider",
-                                          **get_format_dict('%.2f'),
+                                          format_str='%.2f',
                                           ),
                     ),
             show_border=True,
