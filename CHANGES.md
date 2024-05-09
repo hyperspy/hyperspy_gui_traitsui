@@ -4,6 +4,8 @@
 
 ## v2.1 (UNRELEASED)
 
+## v2.0.1 (2024-08-05)
+
 * Fix getting matplotlib backend for matplotlib >= 3.10.dev ([#78](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/78)).
 * Use `qt` instead of `qt4` when setting `ETSConfig.toolkit` ([#78](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/78)).
 * Fix slider in image contrast editor on python >=3.10 ([#76](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/76)).
