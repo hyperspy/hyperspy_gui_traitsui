@@ -2,6 +2,8 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
+## v2.1 (UNRELEASED)
+
 ## v2.0.1 (2024-08-05)
 
 * Fix getting matplotlib backend for matplotlib >= 3.10.dev ([#78](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/78)).
