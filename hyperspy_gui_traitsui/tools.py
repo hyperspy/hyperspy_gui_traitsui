@@ -449,6 +449,87 @@ def remove_background_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
+class BaselineRemovalHandler(tu.Handler):
+
+    def close(self, info, is_ok):
+        # Removes the span selector from the plot
+        obj = info.object
+
+        # Apply before switching off the selector
+        if is_ok is True:
+            self.apply(info)
+
+        if hasattr(obj, 'close'):
+            obj.close()
+
+        return True
+
+    def close_directly(self, info):
+        if (info.ui.owner is not None) and self.close(info, False):
+            info.ui.owner.close()
+
+    def apply(self, info, *args, **kwargs):
+        """Handles the **Apply** button being clicked.
+
+        """
+        obj = info.object
+        obj.is_ok = True
+        if hasattr(obj, 'apply'):
+            obj.apply()
+
+
+@add_display_arg
+def remove_baseline_traitsui(obj, **kwargs):
+    from hyperspy.utils.baseline_removal_tool import algorithms_mapping_splines
+    view = tu.View(
+        tu.Group(
+            'algorithm',
+            tu.Item(
+                'penalized_spline',
+                enabled_when="algorithm not in algorithms_mapping_splines",
+            ),
+            tu.Group(
+                'lam',
+                'diff_order',
+                tu.Item(
+                    'p',
+                    enabled_when="_enable_p",
+                ),
+                tu.Item(
+                    'lam_1',
+                    enabled_when="_enable_lam_1",
+                ),
+                tu.Item(
+                    'eta',
+                    enabled_when="_enable_eta",
+                ),
+            ),
+            tu.Group(
+                tu.Item(
+                    'num_knots',
+                    enabled_when="penalized_spline or algorithm == 'Iterative Reweighted Spline Quantile Regression'",
+                ),
+                tu.Item(
+                    'spline_degree',
+                    enabled_when="penalized_spline or algorithm == 'Iterative Reweighted Spline Quantile Regression'",
+                ),
+                tu.Item(
+                    'symmetric',
+                    enabled_when="algorithm == 'Mixture Model'",
+                ),
+            ),
+        ),
+        buttons=[OKButton, CancelButton],
+        handler=BaselineRemovalHandler,
+        close_result=False, # is_ok=False when using window close button.
+        title='Baseline removal tool',
+        resizable=True,
+        width=300,
+    )
+    return obj, {"view": view}
+
+
+
 class SpikesRemovalHandler(tu.Handler):
 
     def close(self, info, is_ok):
