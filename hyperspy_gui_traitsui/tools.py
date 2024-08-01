@@ -480,13 +480,17 @@ class BaselineRemovalHandler(tu.Handler):
 
 @add_display_arg
 def remove_baseline_traitsui(obj, **kwargs):
-    from hyperspy.utils.baseline_removal_tool import algorithms_mapping_splines
     view = tu.View(
         tu.Group(
             'algorithm',
+            # Enabled when a polynomial baseline is selected
+            tu.Item(
+                'poly_order',
+                enabled_when="_enable_poly_order",
+            ),
             tu.Item(
                 'penalized_spline',
-                enabled_when="algorithm not in algorithms_mapping_splines",
+                enabled_when="_enable_penalized_spline",
             ),
             tu.Group(
                 'lam',
