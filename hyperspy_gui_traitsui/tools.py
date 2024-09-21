@@ -481,8 +481,14 @@ class BaselineRemovalHandler(tu.Handler):
 @add_display_arg
 def remove_baseline_traitsui(obj, **kwargs):
     view = tu.View(
+        'algorithm',
+        tu.Item(
+            '_time_per_pixel',
+            style='readonly',
+            label="Time per pixel (ms)",
+            format_str='%.2f',
+        ),
         tu.Group(
-            'algorithm',
             tu.Group(
                 tu.Item(
                     'lam',
