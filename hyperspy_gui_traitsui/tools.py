@@ -483,18 +483,15 @@ def remove_baseline_traitsui(obj, **kwargs):
     view = tu.View(
         tu.Group(
             'algorithm',
-            # Enabled when a polynomial baseline is selected
-            tu.Item(
-                'poly_order',
-                enabled_when="_enable_poly_order",
-            ),
-            tu.Item(
-                'penalized_spline',
-                enabled_when="_enable_penalized_spline",
-            ),
             tu.Group(
-                'lam',
-                'diff_order',
+                tu.Item(
+                    'lam',
+                    enabled_when="_enable_lam",
+                ),
+                tu.Item(
+                    'diff_order',
+                    enabled_when="_enable_diff_order",
+                ),
                 tu.Item(
                     'p',
                     enabled_when="_enable_p",
@@ -507,20 +504,38 @@ def remove_baseline_traitsui(obj, **kwargs):
                     'eta',
                     enabled_when="_enable_eta",
                 ),
+                tu.Item(
+                'penalized_spline',
+                enabled_when="_enable_penalized_spline",
+                ),
+                label="Whittaker",
+            ),
+            tu.Group(
+                # Enabled when a polynomial baseline is selected
+                tu.Item(
+                    'poly_order',
+                    enabled_when="_enable_poly_order",
+                ),
+                label="Polynomial",
             ),
             tu.Group(
                 tu.Item(
                     'num_knots',
-                    enabled_when="penalized_spline or algorithm == 'Iterative Reweighted Spline Quantile Regression'",
+                    enabled_when="_enable_spline_parameters",
                 ),
                 tu.Item(
                     'spline_degree',
-                    enabled_when="penalized_spline or algorithm == 'Iterative Reweighted Spline Quantile Regression'",
+                    enabled_when="_enable_spline_parameters",
                 ),
                 tu.Item(
                     'symmetric',
                     enabled_when="algorithm == 'Mixture Model'",
                 ),
+                tu.Item(
+                    'quantile',
+                    enabled_when="algorithm == 'Iterative Reweighted Spline Quantile Regression'",
+                ),
+                label="Spline",
             ),
         ),
         buttons=[OKButton, CancelButton],
