@@ -25,6 +25,7 @@ from hyperspy.signal_tools import (
     BackgroundRemoval,
     Signal2DCalibration,
     )
+from hyperspy.utils.baseline_removal_tool import BaselineRemoval
 
 from hyperspy_gui_traitsui.tests.utils import KWARGS
 
@@ -67,6 +68,21 @@ def test_remove_background_tool():
     BgR.span_selector_changed()
     BgR.apply()
     assert s.isig[:500.0].data.mean() < 1
+
+
+def test_remove_baseline():
+    pytest.importorskip("pybaselines")
+
+    s = hs.data.two_gaussians().inav[:5, :5]
+    s.plot()
+
+    br = BaselineRemoval(s)
+    br.gui(**KWARGS)
+    br.algorithm = "Asymmetric Least Squares"
+    br.algorithm = "Adaptive Smoothness Penalized Least Squares"
+    br.lam = 1e7
+    br.apply()
+    assert s.isig[:10].data.mean() < 5
 
 
 def test_signal_2d_calibration():
