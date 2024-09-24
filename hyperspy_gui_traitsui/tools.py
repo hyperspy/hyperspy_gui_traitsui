@@ -452,41 +452,28 @@ def remove_background_traitsui(obj, **kwargs):
 class BaselineRemovalHandler(tu.Handler):
 
     def close(self, info, is_ok):
-        # Removes the span selector from the plot
         obj = info.object
-
-        # Apply before switching off the selector
-        if is_ok is True:
-            self.apply(info)
-
-        if hasattr(obj, 'close'):
-            obj.close()
-
+        obj.close()
         return True
 
-    def close_directly(self, info):
-        if (info.ui.owner is not None) and self.close(info, False):
-            info.ui.owner.close()
-
-    def apply(self, info, *args, **kwargs):
-        """Handles the **Apply** button being clicked.
-
-        """
+    def apply(self, info):
+        """Handles the **Apply** button being clicked."""
         obj = info.object
-        obj.is_ok = True
-        if hasattr(obj, 'apply'):
-            obj.apply()
+        obj.apply()
 
 
 @add_display_arg
 def remove_baseline_traitsui(obj, **kwargs):
     view = tu.View(
-        'algorithm',
+        tu.Item(
+            'algorithm',
+            label="Method",
+        ),
         tu.Item(
             '_time_per_pixel',
             style='readonly',
             label="Time per pixel (ms)",
-            format_str='%.2f',
+            format_str='%.3g',
         ),
         tu.Group(
             tu.Group(
@@ -522,26 +509,57 @@ def remove_baseline_traitsui(obj, **kwargs):
                     'poly_order',
                     enabled_when="_enable_poly_order",
                 ),
+                tu.Item(
+                    'peak_ratio',
+                    enabled_when="_enable_peak_ratio",
+                ),
                 label="Polynomial",
             ),
             tu.Group(
                 tu.Item(
                     'num_knots',
-                    enabled_when="_enable_spline_parameters",
+                    enabled_when="_enable_num_knots",
                 ),
                 tu.Item(
                     'spline_degree',
-                    enabled_when="_enable_spline_parameters",
+                    enabled_when="_enable_spline_degree",
                 ),
                 tu.Item(
                     'symmetric',
-                    enabled_when="algorithm == 'Mixture Model'",
+                    enabled_when="_enable_symmetric",
                 ),
                 tu.Item(
                     'quantile',
-                    enabled_when="algorithm == 'Iterative Reweighted Spline Quantile Regression'",
+                    enabled_when="_enable_quantile",
                 ),
                 label="Spline",
+            ),
+            tu.Group(
+                tu.Item(
+                    'smooth_half_window',
+                    enabled_when="_enable_smooth_half_windows",
+                ),
+                tu.Item(
+                    'num_std',
+                    enabled_when="_enable_num_std",
+                ),
+                tu.Item(
+                    'interp_half_window',
+                    enabled_when="_enable_interp_half_window",
+                ),
+                tu.Item(
+                    'half_window',
+                    enabled_when="_enable_half_window",
+                ),
+                tu.Item(
+                    'section',
+                    enabled_when="_enable_section",
+                ),
+                tu.Item(
+                    'segments',
+                    enabled_when="_enable_segments",
+                ),
+                label="Classification",
             ),
         ),
         buttons=[OKButton, CancelButton],
