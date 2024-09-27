@@ -9,7 +9,7 @@ from hyperspy_gui_traitsui.buttons import (
 from hyperspy_gui_traitsui.utils import add_display_arg
 
 
-class SmoothingHandler(tu.Handler):
+class GenericHandler(tu.Handler):
 
     def close(self, info, is_ok):
         # Removes the span selector from the plot
@@ -263,7 +263,7 @@ def smooth_savitzky_golay_traitsui(obj, **kwargs):
             # 'line_color',
         ),
         kind='live',
-        handler=SmoothingHandler,
+        handler=GenericHandler,
         buttons=OKCancelButtons,
         title='Savitzky-Golay Smoothing',
     )
@@ -279,7 +279,7 @@ def smooth_lowess_traitsui(obj, **kwargs):
             # 'line_color',
         ),
         kind='live',
-        handler=SmoothingHandler,
+        handler=GenericHandler,
         buttons=OKCancelButtons,
         title='Lowess Smoothing',)
     return obj, {"view": view}
@@ -293,7 +293,7 @@ def smooth_tv_traitsui(obj, **kwargs):
             # 'line_color',
         ),
         kind='live',
-        handler=SmoothingHandler,
+        handler=GenericHandler,
         buttons=OKCancelButtons,
         title='Total Variation Smoothing',)
     return obj, {"view": view}
@@ -307,7 +307,7 @@ def smooth_butterworth(obj, **kwargs):
             'order',
             'type'),
         kind='live',
-        handler=SmoothingHandler,
+        handler=GenericHandler,
         buttons=OKCancelButtons,
         title='Butterworth filter',)
     return obj, {"view": view}
@@ -449,19 +449,6 @@ def remove_background_traitsui(obj, **kwargs):
     return obj, {"view": view}
 
 
-class BaselineRemovalHandler(tu.Handler):
-
-    def close(self, info, is_ok):
-        obj = info.object
-        obj.close()
-        return True
-
-    def apply(self, info):
-        """Handles the **Apply** button being clicked."""
-        obj = info.object
-        obj.apply()
-
-
 @add_display_arg
 def remove_baseline_traitsui(obj, **kwargs):
     view = tu.View(
@@ -537,7 +524,7 @@ def remove_baseline_traitsui(obj, **kwargs):
             tu.Group(
                 tu.Item(
                     'smooth_half_window',
-                    enabled_when="_enable_smooth_half_windows",
+                    enabled_when="_enable_smooth_half_window",
                 ),
                 tu.Item(
                     'num_std',
@@ -562,8 +549,8 @@ def remove_baseline_traitsui(obj, **kwargs):
                 label="Classification",
             ),
         ),
-        buttons=[OKButton, CancelButton],
-        handler=BaselineRemovalHandler,
+        buttons=OKCancelButtons,
+        handler=GenericHandler,
         close_result=False, # is_ok=False when using window close button.
         title='Baseline removal tool',
         resizable=True,
