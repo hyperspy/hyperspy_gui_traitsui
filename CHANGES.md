@@ -4,7 +4,8 @@
 
 ## v2.1 (UNRELEASED)
 
-# Add widgets for `Signal1D.remove_baselines` ([#82](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/82)).
+* Add widgets for `Signal1D.remove_baselines` ([#82](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/82)).
+* Add support for python 3.13; drop support for python 3.8 ([#83](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/83)).
 
 ## v2.0.1 (2024-08-05)
 
