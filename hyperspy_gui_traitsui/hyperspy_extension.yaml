@@ -43,6 +43,9 @@ GUI:
       hyperspy.Signal1D.remove_background:
         module: hyperspy_gui_traitsui.tools
         function: remove_background_traitsui
+      hyperspy.Signal1D.remove_baseline:
+        module: hyperspy_gui_traitsui.tools
+        function: remove_baseline_traitsui
       hyperspy.SimpleMessage:
         module: hyperspy_gui_traitsui.messages
         function: simple_message
