@@ -4,6 +4,8 @@
 
 ## v2.1 (UNRELEASED)
 
+# Add widgets for `Signal1D.remove_baselines` ([#82](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/82)).
+
 ## v2.0.1 (2024-08-05)
 
 * Fix getting matplotlib backend for matplotlib >= 3.10.dev ([#78](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/78)).
