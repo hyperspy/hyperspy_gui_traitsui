@@ -16,21 +16,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: ['3.9', '3.10', '3.11']
-        LABEL: [-release, -RnM]
+        PYTHON_VERSION: ['3.10', '3.11', '3.13']
+        LABEL: [-release, -dev]
         PIP_ARGS: [""]
         include:
-          - PYTHON_VERSION: '3.8'
+          - PYTHON_VERSION: '3.12'
             PIP_ARGS: --pre
-            LABEL: -pre_release-RnM
+            LABEL: -dev-pre_release
           - PYTHON_VERSION: '3.12'
-            LABEL: -minimum
+            LABEL: -release-minimum
           - PYTHON_VERSION: '3.12'
-            LABEL: -RnM
-          - PYTHON_VERSION: '3.8'
-            OLDEST_SUPPORTED_VERSION: true
-            # Matching setup.py
-            DEPENDENCIES: traits==5.0 traitsui==6.1 pyqt5==5.12.0
+            LABEL: -dev-minimum
+          - PYTHON_VERSION: '3.9'
+            LABEL: -release
+          - PYTHON_VERSION: '3.9'
+            LABEL: -dev-oldest
+            # Matching pyproject.toml
+            DEPENDENCIES: hyperspy==2.1 traits==6.3 traitsui==7.3
 
     steps:
       - uses: actions/checkout@v4
@@ -55,11 +57,6 @@ jobs:
           python --version
           pip --version
 
-      - name: Install oldest supported version
-        if: ${{ matrix.OLDEST_SUPPORTED_VERSION }}
-        run: |
-          pip install ${{ matrix.DEPENDENCIES }}
-
       - name: 'Install Ubuntu packages for Qt'
         run: |
           sudo apt-get update
@@ -72,18 +69,13 @@ jobs:
           sudo apt-get install libxcb-render-util0
           sudo apt-get install libxcb-xinerama0
 
-      - name: Install HyperSpy (RELEASE_next_minor)
-        if: contains( matrix.LABEL, 'RnM')
+      - name: Install HyperSpy (dev)
+        if: contains( matrix.LABEL, 'dev')
         run: |
           pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_minor
 
-      - name: Install HyperSpy (RELEASE_next_patch)
-        if: contains( matrix.LABEL, 'RnP')
-        run: |
-          pip install git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_patch
-
-      - name: Install exSpy
-        if: ${{ ! contains( matrix.LABEL, 'minimum') }}
+      - name: Install exSpy (dev)
+        if: contains( matrix.LABEL, 'dev')
         run: |
           pip install git+https://github.com/hyperspy/exspy.git
 
@@ -95,6 +87,11 @@ jobs:
         run: |
           pip install ${{ matrix.PIP_ARGS }} .'${{ env.PIP_SELECTOR }}'
 
+      - name: Install oldest supported version
+        if: contains( matrix.LABEL, 'oldest')
+        run: |
+          pip install ${{ matrix.DEPENDENCIES }}
+
       - name: Run test suite
         run: |
           sudo apt-get install xvfb
@@ -102,6 +99,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: ${{ always() }} && ${{ env.PYTEST_ARGS_COVERAGE }} 
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
