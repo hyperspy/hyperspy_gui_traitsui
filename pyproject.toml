@@ -32,7 +32,7 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "hyperspy>=2.1.0.dev119",
+  "hyperspy>=2.3.0",
   "link_traits",
   "traits>=6.3", # to match traitsui requirement
   "traitsui>=7.3",
