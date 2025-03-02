@@ -30,9 +30,9 @@ jobs:
           - PYTHON_VERSION: '3.9'
             LABEL: -release
           - PYTHON_VERSION: '3.9'
-            LABEL: -dev-oldest
+            LABEL: -oldest
             # Matching pyproject.toml
-            DEPENDENCIES: hyperspy==2.1 traits==6.3 traitsui==7.3
+            DEPENDENCIES: hyperspy==2.3.0 traits==6.3 traitsui==7.3
 
     steps:
       - uses: actions/checkout@v4
@@ -87,10 +87,18 @@ jobs:
         run: |
           pip install ${{ matrix.PIP_ARGS }} .'${{ env.PIP_SELECTOR }}'
 
+      - name: Pip list
+        run: |
+          pip list
+
       - name: Install oldest supported version
         if: contains( matrix.LABEL, 'oldest')
         run: |
           pip install ${{ matrix.DEPENDENCIES }}
+
+      - name: Pip list
+        run: |
+          pip list
 
       - name: Run test suite
         run: |
