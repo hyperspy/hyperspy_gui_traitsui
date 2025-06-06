@@ -115,5 +115,5 @@ elif ETSConfig.toolkit == "":
     _logger.warning(
         f"The {backend} matplotlib backend is not compatible with the "
         "traitsui GUI elements. For more information, read "
-        "http://hyperspy.readthedocs.io/en/stable/user_guide/getting_started.html#possible-warnings-when-importing-hyperspy"
+        "https://hyperspy.readthedocs.io/en/stable/user_guide/basic_usage.html#possible-warnings-when-importing-hyperspy"
         ".")
