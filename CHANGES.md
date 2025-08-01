@@ -2,6 +2,8 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
+## v2.2.0 (UNRELEASED)
+
 ## v2.1.1 (2025-08-01)
 
 * Skip test when no toolkit is available or available ([#93](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/93))
