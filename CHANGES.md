@@ -4,7 +4,10 @@
 
 ## v2.2.0 (UNRELEASED)
 
+## v2.1.1 (2025-08-01)
+
 * Skip test when no toolkit is available or available ([#93](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/93))
+* Update documentation link in warning about matplotlib backend incompatibility. ([#91](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/91))
 
 ## v2.1.0 (2025-03-02)
 
