@@ -4,6 +4,8 @@
 
 ## v2.2.0 (UNRELEASED)
 
+* Skip test when no toolkit is available or available ([#93](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/93))
+
 ## v2.1.0 (2025-03-02)
 
 * Add widgets for `Signal1D.remove_baselines` ([#82](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/82)).

@@ -26,10 +26,12 @@ from hyperspy.signal_tools import (
     Signal2DCalibration,
     )
 from hyperspy.utils.baseline_removal_tool import BaselineRemoval
+from traits.etsconfig.api import ETSConfig
 
 from hyperspy_gui_traitsui.tests.utils import KWARGS
 
-
+# either when MPLBACKEND is set to 'agg' or when the GUI toolkit is not available
+@pytest.mark.skipif(ETSConfig.toolkit == "null", reason="No GUI toolkit available or selected.")
 def test_image_contrast_tool():
 
     pytest.importorskip("PyQt5")
