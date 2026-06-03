@@ -20,6 +20,7 @@
 import traitsui.api as tui
 from traitsui.menu import CancelButton
 
+from hyperspy.misc.utils import grouped_editable_traits
 from hyperspy_gui_traitsui.buttons import SaveButton
 from hyperspy_gui_traitsui.utils import add_display_arg
 
@@ -31,13 +32,25 @@ class PreferencesHandler(tui.Handler):
         info.object.save()
         return True
 
+
+def _plot_groups():
+    """Build tui.Group items for the Plot tab from grouped editable traits."""
+    from hyperspy.defaults_parser import preferences
+
+    grouped = grouped_editable_traits(preferences.Plot)
+    groups = []
+    for label, traits in grouped.items():
+        content = [tui.Item(f"Plot.{trait_name}") for trait_name in traits]
+        groups.append(tui.Group(*content, label=label, show_border=True))
+    return groups
+
+
 PREFERENCES_VIEW = tui.View(
     tui.Group(tui.Item('General', style='custom', show_label=False, ),
               label='General'),
     tui.Group(tui.Item('GUIs', style='custom', show_label=False, ),
               label='GUIs'),
-    tui.Group(tui.Item('Plot', style='custom', show_label=False, ),
-              label='Plot'),
+    tui.Group(*_plot_groups(), layout='tabbed', label='Plot'),
     title='Preferences',
     buttons=[SaveButton, CancelButton],
     handler=PreferencesHandler,)
