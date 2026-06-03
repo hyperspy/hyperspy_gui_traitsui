@@ -20,7 +20,11 @@
 import traitsui.api as tui
 from traitsui.menu import CancelButton
 
-from hyperspy.misc.utils import grouped_editable_traits
+try:
+    from hyperspy.misc.utils import grouped_editable_traits
+except ImportError:
+    grouped_editable_traits = None
+
 from hyperspy_gui_traitsui.buttons import SaveButton
 from hyperspy_gui_traitsui.utils import add_display_arg
 
@@ -34,8 +38,15 @@ class PreferencesHandler(tui.Handler):
 
 
 def _plot_groups():
-    """Build tui.Group items for the Plot tab from grouped editable traits."""
+    """Build tui.Group items for the Plot tab from grouped editable traits.
+
+    When ``grouped_editable_traits`` is not available (hyperspy < 2.5),
+    falls back to a single flat ``Item('Plot', style='custom')``.
+    """
     from hyperspy.defaults_parser import preferences
+
+    if grouped_editable_traits is None:
+        return [tui.Item('Plot', style='custom')]
 
     grouped = grouped_editable_traits(preferences.Plot)
     groups = []
