@@ -40,7 +40,7 @@ def _plot_groups():
     grouped = grouped_editable_traits(preferences.Plot)
     groups = []
     for label, traits in grouped.items():
-        content = [tui.Item(f"Plot.{trait_name}") for trait_name in traits]
+        content = [tui.Item(f"object.Plot.{trait_name}") for trait_name in traits]
         groups.append(tui.Group(*content, label=label, show_border=True))
     return groups
 
