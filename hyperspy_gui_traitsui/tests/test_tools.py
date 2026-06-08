@@ -24,6 +24,10 @@ from hyperspy.signal_tools import (
     ImageContrastEditor,
     BackgroundRemoval,
     Signal2DCalibration,
+    SmoothingLowess,
+    SmoothingSavitzkyGolay,
+    SmoothingTV,
+    ButterworthFilter,
     )
 from hyperspy.utils.baseline_removal_tool import BaselineRemoval
 from traits.etsconfig.api import ETSConfig
@@ -85,6 +89,74 @@ def test_remove_baseline():
     br.lam = 1e7
     br.apply()
     assert s.isig[:10].data.mean() < 5
+
+
+def test_smooth_savitzky_golay_tool():
+    rng = np.random.default_rng(1)
+    data = rng.normal(loc=0.0, scale=1.0, size=(3, 101))
+    s = hs.signals.Signal1D(data)
+    s.plot()
+
+    smooth = SmoothingSavitzkyGolay(s)
+    smooth.gui(**KWARGS)
+    smooth.window_length = 7
+    smooth.polynomial_order = 2
+
+    original_data = s.data.copy()
+    smooth.apply()
+
+    assert not np.allclose(s.data, original_data)
+
+
+def test_smooth_lowess_tool():
+    rng = np.random.default_rng(2)
+    data = rng.normal(loc=0.0, scale=1.0, size=(3, 101))
+    s = hs.signals.Signal1D(data)
+    s.plot()
+
+    smooth = SmoothingLowess(s)
+    smooth.gui(**KWARGS)
+    smooth.smoothing_parameter = 0.2
+    smooth.number_of_iterations = 2
+
+    original_data = s.data.copy()
+    smooth.apply()
+
+    assert not np.allclose(s.data, original_data)
+
+
+def test_smooth_total_variation_tool():
+    rng = np.random.default_rng(3)
+    data = rng.normal(loc=0.0, scale=1.0, size=(3, 101))
+    s = hs.signals.Signal1D(data)
+    s.plot()
+
+    smooth = SmoothingTV(s)
+    smooth.gui(**KWARGS)
+    smooth.smoothing_parameter = 10
+
+    original_data = s.data.copy()
+    smooth.apply()
+
+    assert not np.allclose(s.data, original_data)
+
+
+def test_smooth_butterworth_tool():
+    rng = np.random.default_rng(4)
+    data = rng.normal(loc=0.0, scale=1.0, size=(3, 101))
+    s = hs.signals.Signal1D(data)
+    s.plot()
+
+    smooth = ButterworthFilter(s)
+    smooth.gui(**KWARGS)
+    smooth.cutoff_frequency_ratio = 0.15
+    smooth.order = 2
+    smooth.type = "low"
+
+    original_data = s.data.copy()
+    smooth.apply()
+
+    assert not np.allclose(s.data, original_data)
 
 
 def test_signal_2d_calibration():

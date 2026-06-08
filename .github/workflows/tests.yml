@@ -37,7 +37,7 @@ jobs:
           - PYTHON_VERSION: '3.9'
             LABEL: -oldest
             # Matching pyproject.toml
-            DEPENDENCIES: hyperspy==2.3.0 traits==6.3 traitsui==7.3
+            DEPENDENCIES: hyperspy==2.3.0 traits==7.0.2 traitsui==7.4.1
 
     steps:
       - uses: actions/checkout@v6
