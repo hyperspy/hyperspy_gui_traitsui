@@ -4,6 +4,8 @@
 
 ## v2.2.0 (UNRELEASED)
 
+* Add widget to interactively find X-ray lines in a EDS spectrum (`exspy.EDSSpectrum.print_lines_table` toolkey). ([#113](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/113))
+
 ## v2.1.1 (2025-08-01)
 
 * Skip test when no toolkit is available or available ([#93](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/93))

@@ -17,13 +17,14 @@
 # along with HyperSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 
+import traits.api as t
 import traitsui
 import traitsui.api as tu
 from traitsui.menu import OKButton, CancelButton, OKCancelButtons
 
 from hyperspy_gui_traitsui.axes import get_navigation_sliders_group
 from hyperspy_gui_traitsui.buttons import (
-    OurApplyButton,HelpButton, OurResetButton
+    OurApplyButton, HelpButton, OurResetButton, OurCloseButton
     )
 from hyperspy_gui_traitsui.utils import add_display_arg
 
@@ -784,3 +785,197 @@ def find_peaks2D_traitsui(obj, **kwargs):
     context.update({"obj":obj})
 
     return obj, {"view": view, "context": context}
+
+
+EDS_LINES_TABLE_HELP = (
+    "Move the vertical line on the signal plot to set the energy around\n"
+    "which the X-ray lines are searched. Use the position, the width, the\n"
+    "weight threshold and the line families to refine the search. Tick\n"
+    "the checkbox of an element in the table to display all its X-ray\n"
+    "lines on the signal."
+)
+
+
+class XrayLineRow(t.HasTraits):
+    """Table row describing a single X-ray line."""
+
+    element = t.Str()
+    line = t.Str()
+    energy = t.Float()
+    weight = t.Float()
+    intensity = t.Str()
+    selected = t.Bool(False)
+
+
+class XrayLinesTable(t.HasTraits):
+    """Helper object storing the rows of the X-ray lines table.
+
+    The rows are obtained from the ``get_lines_information()`` method of
+    the ``exspy._signal_tools.EDSRange`` tool passed at instantiation and
+    the table is refreshed whenever the tool parameters change. Ticking
+    the checkbox of a row adds the corresponding element to
+    ``tool.selected_elements``, which displays all its X-ray lines on the
+    signal plot.
+    """
+
+    rows = t.List(t.Instance(XrayLineRow))
+
+    def __init__(self, tool, **kwargs):
+        super().__init__(**kwargs)
+        self._tool = tool
+        self._updating = False
+        self._observing = False
+        self.rebuild()
+        tool.observe(
+            self._on_tool_changed,
+            ["position", "width", "only_lines", "weight_threshold"],
+        )
+        self._observing = True
+
+    def rebuild(self):
+        """Populate the table with the X-ray lines at the current position."""
+        lines_information = self._tool.get_lines_information()
+        selected_elements = self._tool.selected_elements
+        rows = []
+        for element, element_lines in lines_information:
+            for line, line_info in element_lines:
+                row = XrayLineRow(
+                    element=str(element),
+                    line=str(line),
+                    energy=float(line_info["energy (keV)"]),
+                    weight=float(line_info["weight"]),
+                    intensity=line_info["intensity"],
+                    selected=element in selected_elements,
+                )
+                row.observe(self._on_row_selected, "selected")
+                rows.append(row)
+        # Sort by energy, consistently with the default sorting of the
+        # exspy X-ray lines tables
+        self.rows = sorted(rows, key=lambda row: row.energy)
+
+    def disconnect(self):
+        """Stop observing the tool; called when the widget is closed."""
+        if self._observing:
+            self._tool.observe(
+                self._on_tool_changed,
+                ["position", "width", "only_lines", "weight_threshold"],
+                remove=True,
+            )
+            self._observing = False
+
+    def _on_tool_changed(self, event):
+        self.rebuild()
+
+    def _on_row_selected(self, event):
+        if self._updating:
+            # Guard against recursive calls triggered when the checkboxes
+            # of the rows of the same element are synchronised below
+            return
+        row = event.object
+        tool = self._tool
+        selected_elements = tool.selected_elements
+        initial_length = len(selected_elements)
+        if row.selected:
+            selected_elements.add(row.element)
+        else:
+            selected_elements.discard(row.element)
+        # Keep the checkbox of all the rows of the same element in sync
+        self._updating = True
+        try:
+            for other in self.rows:
+                if other.element == row.element:
+                    other.selected = row.selected
+        finally:
+            self._updating = False
+        if len(selected_elements) != initial_length:
+            tool.update_markers()
+
+
+class EDSRangeHandler(tu.Handler):
+
+    def close(self, info, is_ok):
+        # Removes the vertical line from the plot and the table observers
+        info.obj.close()
+        info.table.disconnect()
+        return True
+
+    def close_directly(self, info):
+        if (info.ui.owner is not None) and self.close(info, False):
+            info.ui.owner.close()
+
+    def update_table(self, info):
+        """Handles the **Refresh table** button being clicked.
+
+        """
+        info.table.rebuild()
+
+
+@add_display_arg
+def print_lines_table_traitsui(obj, **kwargs):
+    units = obj.signal.axes_manager.signal_axes[0].units
+
+    refresh_button = tu.Action(
+        name="Refresh table",
+        action="update_table",
+        tooltip="Refresh the X-ray lines table at the current position.",
+    )
+
+    view = tu.View(
+        tu.Group(
+            tu.Item("obj.position", label=f"Position ({units})",
+                    format_str="%.2f"),
+            tu.Item("obj.width", label=f"Width ({units})"),
+            tu.Item("obj.weight_threshold", label="Weight threshold"),
+            tu.Item("obj.only_lines", label="Only lines"),
+            columns=2,
+        ),
+        tu.Item(
+            "table.rows",
+            show_label=False,
+            editor=tu.TableEditor(
+                columns=[
+                    tu.ObjectColumn(
+                        name="selected",
+                        label="Show",
+                        show_checkbox=True,
+                        editable=True,
+                        width=0.1,
+                    ),
+                    tu.ObjectColumn(name="element", label="Element",
+                                    editable=False, width=0.16),
+                    tu.ObjectColumn(name="line", label="Line",
+                                    editable=False, width=0.13),
+                    tu.ObjectColumn(
+                        name="energy",
+                        label=f"Energy ({units})",
+                        editable=False,
+                        format="%#.4g",
+                        width=0.24,
+                    ),
+                    tu.ObjectColumn(
+                        name="weight",
+                        label="Weight",
+                        editable=False,
+                        format="%#.4g",
+                        width=0.16,
+                    ),
+                    tu.ObjectColumn(name="intensity", label="Intensity",
+                                    editable=False, width=0.21),
+                ],
+                editable=True,
+                sortable=False,
+                reorderable=False,
+            ),
+        ),
+        tu.Label(EDS_LINES_TABLE_HELP),
+        buttons=[refresh_button, OurCloseButton],
+        handler=EDSRangeHandler,
+        title="X-ray lines table",
+        resizable=True,
+        width=630,
+    )
+
+    return obj, {
+        "view": view,
+        "context": {"obj": obj, "table": XrayLinesTable(obj)},
+    }

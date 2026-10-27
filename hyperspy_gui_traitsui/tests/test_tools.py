@@ -181,3 +181,55 @@ def test_signal_2d_calibration_3d_data():
     s2dc.apply()
     assert s.axes_manager.signal_axes[0].scale == 2
     assert s.axes_manager.signal_axes[1].scale == 2
+
+
+@pytest.mark.skipif(ETSConfig.toolkit == "null", reason="No GUI toolkit available or selected.")
+def test_lines_at_energy_interactive():
+    exspy = pytest.importorskip("exspy")
+
+    from exspy._signal_tools import EDSRange
+
+    from hyperspy_gui_traitsui.tools import XrayLinesTable
+
+    s = exspy.data.EDS_TEM_FePt_nanoparticles()
+    er = EDSRange(s)
+    er.gui(**KWARGS)
+
+    # Default parameters of the tool
+    assert er.width == 0.2
+    assert er.only_lines == "all"
+    assert er.selected_elements == set()
+
+    table = XrayLinesTable(er)
+    # The table is populated at the initial position and sorted by energy
+    assert len(table.rows) > 0
+    energies = [row.energy for row in table.rows]
+    assert energies == sorted(energies)
+
+    # Narrow the search around the Fe Ka line
+    er.position = 6.4
+    er.width = 0.05
+    assert [row.element for row in table.rows] == ["Fe"]
+    row = table.rows[0]
+    assert row.line == "Ka"
+    assert row.energy == pytest.approx(6.4039, abs=1e-4)
+    assert row.weight == pytest.approx(1.0)
+    assert row.intensity == "##########"
+
+    # Selecting the element displays its X-ray lines on the signal
+    row.selected = True
+    assert er.selected_elements == {"Fe"}
+    assert len(s._xray_markers["names"]) == 6
+
+    # Deselecting the element removes the markers
+    row.selected = False
+    assert er.selected_elements == set()
+    assert len(s._xray_markers["names"]) == 0
+
+    # Change the line family: Mn Kb at 6.49 keV
+    er.only_lines = "b"
+    er.position = 6.49
+    assert [row.element for row in table.rows] == ["Mn"]
+    assert table.rows[0].line == "Kb"
+
+    er.close()
