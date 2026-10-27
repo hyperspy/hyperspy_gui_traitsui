@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: ['3.10', '3.11', '3.13']
+        PYTHON_VERSION: ['3.10', '3.11', '3.13', '3.14']
         LABEL: [-release, -dev]
         PIP_ARGS: [""]
         include:
@@ -32,9 +32,7 @@ jobs:
             LABEL: -release-minimum
           - PYTHON_VERSION: '3.12'
             LABEL: -dev-minimum
-          - PYTHON_VERSION: '3.9'
-            LABEL: -release
-          - PYTHON_VERSION: '3.9'
+          - PYTHON_VERSION: '3.10'
             LABEL: -oldest
             # Matching pyproject.toml
             DEPENDENCIES: hyperspy==2.3.0 traits==7.0.2 traitsui==7.4.1
@@ -62,17 +60,26 @@ jobs:
           python --version
           pip --version
 
+      - name: Prepare Ubuntu package cache
+        id: apt-cache
+        run: |
+          mkdir -p "$RUNNER_TEMP/apt-cache"
+          echo "image=$ImageOS-$ImageVersion" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Ubuntu packages
+        uses: actions/cache@v5
+        with:
+          path: ${{ runner.temp }}/apt-cache/*.deb
+          key: apt-${{ runner.os }}
+
       - name: 'Install Ubuntu packages for Qt'
         run: |
           sudo apt-get update
-          sudo apt-get install qtbase5-dev
-          sudo apt-get install libxkbcommon-x11-0
-          sudo apt-get install libxcb-icccm4
-          sudo apt-get install libxcb-image0
-          sudo apt-get install libxcb-keysyms1
-          sudo apt-get install libxcb-randr0
-          sudo apt-get install libxcb-render-util0
-          sudo apt-get install libxcb-xinerama0
+          sudo apt-get -o Dir::Cache::archives="$RUNNER_TEMP/apt-cache" \
+            -o APT::Keep-Downloaded-Packages=true install -y \
+            qtbase5-dev libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 \
+            libxcb-xinerama0 xvfb
 
       - name: Install HyperSpy (dev)
         if: contains( matrix.LABEL, 'dev')
@@ -107,7 +114,6 @@ jobs:
 
       - name: Run test suite
         run: |
-          sudo apt-get install xvfb
           xvfb-run pytest ${{ env.PYTEST_ARGS }} ${{ env.PYTEST_ARGS_COVERAGE }}
 
       - name: Upload coverage to Codecov
