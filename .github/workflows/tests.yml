@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: ['3.10', '3.11', '3.13']
+        PYTHON_VERSION: ['3.10', '3.11', '3.13', '3.14']
         LABEL: [-release, -dev]
         PIP_ARGS: [""]
         include:
@@ -32,9 +32,7 @@ jobs:
             LABEL: -release-minimum
           - PYTHON_VERSION: '3.12'
             LABEL: -dev-minimum
-          - PYTHON_VERSION: '3.9'
-            LABEL: -release
-          - PYTHON_VERSION: '3.9'
+          - PYTHON_VERSION: '3.10'
             LABEL: -oldest
             # Matching pyproject.toml
             DEPENDENCIES: hyperspy==2.3.0 traits==7.0.2 traitsui==7.4.1
