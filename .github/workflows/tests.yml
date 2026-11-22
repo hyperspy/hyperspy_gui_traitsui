@@ -123,7 +123,7 @@ jobs:
           xvfb-run pytest ${{ env.PYTEST_ARGS }} ${{ env.PYTEST_ARGS_COVERAGE }}
 
       - name: Upload coverage to Codecov
-        if: ${{ always() }} && ${{ env.PYTEST_ARGS_COVERAGE }} 
+        if: ${{ always() && env.PYTEST_ARGS_COVERAGE != '' }}
         uses: codecov/codecov-action@v7
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
