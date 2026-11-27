@@ -2,7 +2,10 @@
   Add a single entry in the corresponding section below.
   See https://keepachangelog.com for details
 
-## v2.2.0 (UNRELEASED)
+## v2.2.1 (UNRELEASED)
+
+
+## v2.2.0 (2026-11-27)
 
 * Add support for Python 3.14 and 3.15; drop support for Python 3.9 and 3.10.
 * Add widget to interactively find X-ray lines in a EDS spectrum (`exspy.EDSSpectrum.print_lines_table` toolkey). ([#113](https://github.com/hyperspy/hyperspy_gui_traitsui/pull/113))
